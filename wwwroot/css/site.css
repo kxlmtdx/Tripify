@@ -1,0 +1,193 @@
+html {
+    font-size: 14px;
+    position: relative;
+    min-height: 100%;
+}
+
+@media (min-width: 768px) {
+    html {
+        font-size: 16px;
+    }
+}
+
+body {
+    margin-bottom: 60px;
+    font-family: Arial, sans-serif;
+    background-color: #141414;
+    padding: 20px;
+}
+
+/* Стили для кнопок и фокуса */
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+/* Стили для карточки view-card */
+.view-card {
+    display: flex;
+    align-items: center;
+    background-color: #1f1f1f; /* Фон по умолчанию, если изображение не загрузится */
+    background-image: url('path/to/your/image.png'); /* Путь к изображению */
+    background-size: cover; /* Растягиваем изображение на весь фон */
+    background-position: center; /* Центрируем изображение */
+    background-repeat: no-repeat; /* Запрещаем повторение изображения */
+    border-radius: 20px;
+    padding: 15px;
+    max-width: 1000px;
+    scroll-snap-align: start; /* Привязка к началу карточки */
+    margin: 0 0 20px 0; /* Убрали margin-right */
+    flex: 0 0 auto; /* Карточки не растягиваются и не сжимаются */
+    width: 300px; /* Фиксированная ширина карточки */
+    position: relative; /* Для позиционирования внутренних элементов */
+    overflow: hidden; /* Чтобы изображение не выходило за границы карточки */
+}
+
+    .view-card img {
+        border-radius: 5%;
+        width: 150px;
+        height: 100px;
+        object-fit: cover; /* Чтобы изображение не искажалось */
+    }
+
+    .view-card .info {
+        margin-left: 10px;
+        position: relative; /* Чтобы текст был поверх фонового изображения */
+        z-index: 1; /* Убедимся, что текст поверх фона */
+    }
+
+    .view-card h4 {
+        color: #efefef;
+        margin: 0;
+        text-align: left;
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .view-card h6 {
+        color: #efefef;
+        margin: 0;
+        text-align: left;
+        font-size: 14px;
+        font-weight: 400;
+    }
+
+.outer-container {
+    background-color: #1f1f1f;
+    border-radius: 20px; /* Скругленные углы */
+    padding: 20px; /* Внутренний отступ */
+    max-width: 800px; /* Максимальная ширина */
+    width: 100%; /* Занимает всю доступную ширину */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Тень */
+}
+
+/* Горизонтальный контейнер с карточками */
+.horizontal-container {
+    display: flex;
+    gap: 20px; /* Расстояние между карточками */
+    overflow-x: auto; /* Горизонтальная прокрутка */
+    scroll-snap-type: x mandatory; /* Привязка к карточкам при прокрутке */
+    padding: 10px 0; /* Отступы сверху и снизу */
+    -webkit-overflow-scrolling: touch; /* Плавная прокрутка на мобильных устройствах */
+}
+
+    /* Убираем стандартный скроллбар */
+    .horizontal-container::-webkit-scrollbar {
+        display: none;
+    }
+
+.horizontal-container {
+    -ms-overflow-style: none; /* IE и Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+
+.main-container {
+    max-width: 800px; /* Максимальная ширина */
+    margin: 0 auto; /* Центрирование по горизонтали */
+    width: 100%; /* Занимает всю доступную ширину */
+}
+
+.search-container {
+    background-color: #1f1f1f;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 800px;
+    width: 100%;
+}
+
+/* Поисковая форма */
+.search-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+/* Группа полей ввода */
+.input-group {
+    flex: 1 1 calc(33.333% - 20px); /* Три поля в строке на ПК */
+    display: flex;
+    flex-direction: column;
+}
+
+    .input-group label {
+        font-size: 14px;
+        color: #ffffff; /* Белый цвет текста */
+        margin-bottom: 5px;
+    }
+
+    .input-group input {
+        padding: 10px;
+        border: 1px solid #cccccc;
+        border-radius: 5px; /* Скругление для всех углов */
+        font-size: 16px;
+        width: 100%; /* Ширина на всю доступную область */
+        background-color: #ffffff; /* Белый фон */
+        outline: none; /* Убираем стандартный outline */
+    }
+
+/* Стили для поля даты */
+.date-input {
+    background-color: #ffffff;
+    cursor: pointer; /* Курсор-указатель для интерактивности */
+}
+
+/* Кнопка поиска */
+.search-button {
+    background-color: #f58142;
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    flex: 1 1 100%; /* Кнопка на всю ширину на мобильных */
+    transition: background-color 0.3s ease;
+}
+
+    .search-button:hover {
+        background-color: #e5733a; /* Темнее при наведении */
+    }
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 600px) {
+    .input-group {
+        flex: 1 1 100%; /* Поля ввода на всю ширину */
+    }
+
+    .search-button {
+        flex: 1 1 100%; /* Кнопка на всю ширину */
+    }
+}
+
+.more-button {
+    background-color: #f58142;
+    color: #ffffff;
+    display: flex;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}

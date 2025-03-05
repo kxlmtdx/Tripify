@@ -1,0 +1,104 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link rel="stylesheet" href="~/css/styles.css">
+</head>
+<body>
+    <div class="main-container">
+        <div class="text-center">
+            <h2 style="font-weight: bold; margin: 30px; color:#efefef">Ваше путешествие начинается здесь.</h2>
+
+            <div class="search-container">
+                <div class="search-form">
+                    <div class="input-group">
+                        <input type="text" id="from" placeholder="Откуда?">
+                    </div>
+
+                    <div class="input-group">
+                        <input type="text" id="to" placeholder="Куда?">
+                    </div>
+
+                    <div class="input-group">
+                        <input type="text" id="date" placeholder="Дата?" class="date-input">
+                    </div>
+
+                    <button class="search-button">Найти билеты</button>
+                </div>
+            </div>
+
+            <div class="view-card" style="flex: 1 1 auto; width: 100%; margin-top: 30px; background-image: url(https://i.pinimg.com/736x/99/25/9a/99259a2ff18eceead3b0b15bb7b63eed.jpg);">
+                <div class="info">
+                    <h4>🔥 Горячие туры</h4>
+                    <h6 style="margin-left: 3px">Успей оформить пока не разобрали!</h6>
+                    <button class="more-button" style="margin-top: 8px;">Узнать больше</button>
+                </div>
+            </div>
+
+            <div class="outer-container" style="margin-top:40px">
+                <h5 style="color:#efefef; font-weight:bold; text-align: left">Популярные направления</h5>
+                <div class="horizontal-container">
+                    <div class="view-card" style="background:#2e3035; width:170px">
+                        <div class="info">
+                            <h4>тут</h4>
+                            <h6>TEXT TEXT</h6>
+                        </div>
+                    </div>
+
+                    <div class="view-card" style="background:#2e3035; width:170px">
+                        <div class="info">
+                            <h4>пока</h4>
+                            <h6>TEXT TEXT</h6>
+                        </div>
+                    </div>
+
+                    <div class="view-card" style="background:#2e3035; width:170px; height">
+                        <div class="info">
+                            <h4>нихуя</h4>
+                            <h6>TEXT TEXT</h6>
+                        </div>
+                    </div>
+
+                    <div class="view-card" style="background:#2e3035; width:170px">
+                        <div class="info">
+                            <h4>нет</h4>
+                            <h6>TEXT TEXT</h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+    <script>
+        // Flatpickr
+        flatpickr("#date", {
+            dateFormat: "d.m.Y",
+            locale: "ru",
+            minDate: "today",
+        });
+
+        // Swiper
+        var swiper = new Swiper('.swiper-container', {
+            slidesPerView: 'auto',
+            spaceBetween: 20,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+        });
+    </script>
+</body>
+</html>
