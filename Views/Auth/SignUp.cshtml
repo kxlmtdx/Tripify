@@ -1,0 +1,37 @@
+﻿@{
+    ViewData["SignUp"] = "SignUp";
+}
+
+<div class="auth-container">
+    <div class="outer-container" style="margin-top:40px">
+        <h5 style="color:#ffffff">Имя</h5>
+        <form method="post" asp-action="Register" class="mb-4">
+            <div class="input-group">
+                <input name="name" type="text" id="name" placeholder="Ваше имя">
+            </div>
+
+            <h5 style="color:#ffffff; margin-top: 10px">Логин</h5>
+            <div class="input-group">
+                <input name="login" type="text" id="login" placeholder="Придумайте логин">
+            </div>
+
+            <h5 style="color:#ffffff; margin-top: 10px">Email</h5>
+            <div class="input-group">
+                <input name="email" type="email" id="email" placeholder="example@example.com">
+            </div>
+
+            <h5 style="color:#ffffff; margin-top: 10px">Пароль</h5>
+            <div class="input-group">
+                <input name="password" type="password" id="password" placeholder="Придумайте пароль">
+            </div>
+
+            <h5 style="color:#ffffff; margin-top: 10px">Подтвердите пароль</h5>
+            <div class="input-group">
+                <input name="confirmPassword" type="password" id="confirmPassword" placeholder="Повторите пароль">
+            </div>
+
+            @Html.AntiForgeryToken()
+            <button type="submit" class="search-button" style="margin-top: 12px; width: 100%">Зарегистрироваться</button>
+        </form>
+    </div>
+</div>

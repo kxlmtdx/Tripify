@@ -1,3 +1,6 @@
+using Microsoft.EntityFrameworkCore;
+using TourFlow.Data;
+
 namespace TourFlow
 {
     public class Program
@@ -8,6 +11,10 @@ namespace TourFlow
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
+              builder.Configuration.GetConnectionString("DefaultConnection") // this tells the exact database to use
+                  ));
 
             var app = builder.Build();
 

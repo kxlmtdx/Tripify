@@ -12,6 +12,11 @@ namespace TourFlow.Controllers
         {
             _logger = logger;
         }
+        public IActionResult RandomView()
+        {
+            //Вместо этой хероты вернём данные для рандомных карточек с направлениями
+            return View();
+        }
 
         public IActionResult Index()
         {
