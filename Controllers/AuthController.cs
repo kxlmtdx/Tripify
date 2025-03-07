@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using System.Diagnostics;
 using TourFlow.Data;
 using TourFlow.Models;
 
@@ -114,9 +115,29 @@ namespace TourFlow.Controllers
             return View("~/Views/Home/Index.cshtml");
         }
 
-        public ActionResult SignUp()
+        public ActionResult SignUp(string regLogin, string regPassword, string password)
         {
-            return View();
+            var user = _db.Accounts.FirstOrDefault(u => u.Login == regLogin);
+            if (user != null)
+            {
+                return BadRequest("Пользователь с таким логином уже есть.");
+            }
+
+            if (regPassword != password)
+            {
+                return BadRequest("Пароли не совпадают");
+            }
+
+            var newUser = new User
+            {
+                Login = regLogin,
+                Password = regPassword // в идеале хэшируем
+            };
+
+            _db.Accounts.Add(newUser);
+            _db.SaveChanges();
+
+            return View("~/Views/Home/Index.cshtml");
         }
     }
 }
