@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль пользователя</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="main-container">
+        <h2 style="color: #efefef; text-align: left; margin-bottom: 20px; margin-top: 20px">Профиль</h2>
+        <div class="view-card" style="background: #1f1f1f; flex-direction: column; align-items: flex-start;">
+            <div style="display: flex; align-items: center; width: 100%;">
+                <img src="https://sun9-13.userapi.com/impg/FKUvyX1bn5vGSXvki4jGglDypXkIJjYazPvxog/zuk7ngG3Yog.jpg?size=640x640&quality=96&sign=aeb5559b6584e46a603a091dd193fa05&type=album" alt="Аватар" style="border-radius: 50%; height: 100px; width: 100px;">
+                <div class="info" style="margin-left: 20px;">
+                    <h4>Kxlmtdx</h4>
+                    <h6>kxlmtdx@example.com</h6>
+                    <h6>+7 (999) 123-45-67</h6>
+                </div>
+            </div>
+            <button class="more-button" style="margin-top: 15px;">Редактировать профиль</button>
+        </div>
+
+        <div class="outer-container">
+            <h5 style="color: #efefef; font-weight: bold; margin-bottom: 10px;">Мои заказы</h5>
+
+            <div class="slider-container">
+                <input type="radio" id="active" name="orders" checked>
+                <label for="active" class="slider-button">Активные</label>
+
+                <input type="radio" id="archived" name="orders">
+                <label for="archived" class="slider-button">Архив</label>
+
+                <div class="slider-track"></div>
+            </div>
+
+            <div id="active-orders" class="orders-container">
+                <div class="view-card" style="background: #2e3035; width: 100%;">
+                    <div class="info">
+                        <h4>Мале</h4>
+                        <h6 style="color: #88a1d5;"> от 12 345₽</h6>
+                        <h6>Статус: В процессе</h6>
+                    </div>
+                </div>
+            </div>
+            <div id="archived-orders" class="orders-container" style="display: none;">
+                <div class="view-card" style="background: #2e3035; width: 100%;">
+                    <div class="info">
+                        <h4>Колломбо</h4>
+                        <h6 style="color: #88a1d5;"> от 8 954₽</h6>
+                        <h6>Статус: Завершен</h6>
+                    </div>
+                </div>
+                <div class="view-card" style="background: #2e3035; width: 100%;">
+                    <div class="info">
+                        <h4>Ташкент</h4>
+                        <h6 style="color: #88a1d5;"> от 7 890₽</h6>
+                        <h6>Статус: Завершен</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="@Url.Content("~/js/switch.js")"></script>
+</body>
+</html>

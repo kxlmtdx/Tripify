@@ -112,10 +112,15 @@ namespace TourFlow.Controllers
                 return NotFound("Пользователь с таким логином не найден.");
             }
 
-            return View("~/Views/Home/Index.cshtml");
+            return View("~/Views/Profile/ProfilePage.cshtml");
         }
 
-        public ActionResult SignUp(string regLogin, string regPassword, string password)
+        public ActionResult SignUp()
+        {
+            return View();
+        }
+
+        public ActionResult SignUpAction(string regLogin, string regPassword, string password)
         {
             var user = _db.Accounts.FirstOrDefault(u => u.Login == regLogin);
             if (user != null)

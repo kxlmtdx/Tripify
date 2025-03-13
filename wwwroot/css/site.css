@@ -25,32 +25,36 @@ body {
     display: flex;
     align-items: center;
     background-color: #1f1f1f;
-    background-image: url('path/to/your/image.png'); /* это куда и зачем */
+    background-image: url('path/to/your/image.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     border-radius: 20px;
     padding: 15px;
-    max-width: 1000px;
     scroll-snap-align: start;
     margin: 0 0 20px 0;
-    flex: 0 0 auto;
-    width: 300px;
+    flex: 1 1 auto;
+    min-width: 170px;
     position: relative;
     overflow: hidden;
 }
 
+
     .view-card img {
         border-radius: 5%;
-        width: 150px;
-        height: 100px;
+        height: 80px;
         object-fit: cover;
+        min-width: 80px;
+        max-width: auto;
     }
 
     .view-card .info {
         margin-left: 10px;
         position: relative;
-        z-index: 1; /* яяя */
+        z-index: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     .view-card h4 {
@@ -69,10 +73,12 @@ body {
         font-weight: 400;
     }
 
+
+
 .outer-container {
     background-color: #1f1f1f;
     border-radius: 20px;
-    padding: 20px; /* Внутренний отступ */
+    padding: 20px;
     max-width: 800px;
     width: 100%;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
@@ -80,11 +86,10 @@ body {
 
 .horizontal-container {
     display: flex;
-    gap: 20px;
-    overflow-x: auto; /* Горизонтальная прокрутка */
-    scroll-snap-type: x mandatory; /* Привязка к карточкам при прокрутке */
-    padding: 10px 0;
-    -webkit-overflow-scrolling: touch;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    gap: 10px;
+    width: 100%;
 }
 
     .horizontal-container::-webkit-scrollbar {
@@ -92,6 +97,22 @@ body {
     }
 
 .horizontal-container {
+    -ms-overflow-style: none; /* IE и Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+.simplehorizontal-container {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 5px;
+}
+
+    .simplehorizontal-container::-webkit-scrollbar {
+        display: none;
+    }
+
+.simplehorizontal-container {
     -ms-overflow-style: none; /* IE и Edge */
     scrollbar-width: none; /* Firefox */
 }
@@ -188,4 +209,55 @@ body {
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+}
+
+.slider-container {
+    display: flex;
+    position: relative;
+    background-color: #2e3035;
+    border-radius: 20px;
+    padding: 5px;
+    margin-bottom: 20px;
+    width: stretch; /* Растягиваем на всю доступную ширину */
+}
+
+    .slider-container input[type="radio"] {
+        display: none; /* Скрываем радиокнопки */
+    }
+
+.slider-button {
+    padding: 10px 20px;
+    border-radius: 15px;
+    cursor: pointer;
+    color: #efefef;
+    font-weight: 600;
+    z-index: 1;
+    transition: color 0.3s ease;
+    display: flex; /* Добавляем flex для центрирования */
+    align-items: center; /* Центрируем текст по вертикали */
+    justify-content: center; /* Центрируем текст по горизонтали */
+    flex: 1; /* Равномерное распределение пространства */
+}
+
+.slider-container input[type="radio"]:checked + .slider-button {
+    color: #141414; /* Цвет текста для активной кнопки */
+}
+
+.slider-track {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    height: calc(100% - 10px);
+    width: calc(50% - 10px);
+    background-color: #f58142;
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+}
+
+.slider-container #active:checked ~ .slider-track {
+    transform: translateX(0); /* Позиция трека для "Активные" */
+}
+
+.slider-container #archived:checked ~ .slider-track {
+    transform: translateX(100%); /* Позиция трека для "Архив" */
 }
