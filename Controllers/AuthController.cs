@@ -112,7 +112,11 @@ namespace TourFlow.Controllers
                 return NotFound("Пользователь с таким логином не найден.");
             }
 
-            return View("~/Views/Profile/ProfilePage.cshtml");
+            if (user.Type == "admin")
+            {
+                return View("~/Views/Home/Privacy.cshtml");
+            }
+            else return View("~/Views/Profile/ProfilePage.cshtml");
         }
 
         public ActionResult SignUp()
