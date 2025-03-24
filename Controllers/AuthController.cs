@@ -25,7 +25,8 @@ namespace TourFlow.Controllers
 
         public IActionResult SignIn()
         {
-            return View();
+            var users = _db.Accounts.ToList(); // Получаем всех пользователей из базы
+            return View(users); // Передаем список пользователей в представление
         }
 
         // GET: AuthController/Details/5
@@ -112,11 +113,11 @@ namespace TourFlow.Controllers
                 return NotFound("Пользователь с таким логином не найден.");
             }
 
-            if (user.Type == "admin")
+            if (user.Account_Type_Id == 1)
             {
-                return View("~/Views/Home/Privacy.cshtml");
+                return RedirectToAction("AdminPanel", "Admin");
             }
-            else return View("~/Views/Profile/ProfilePage.cshtml");
+            else return RedirectToAction("ProfilePage", "Profile");
         }
 
         public ActionResult SignUp()
@@ -137,7 +138,7 @@ namespace TourFlow.Controllers
                 return BadRequest("Пароли не совпадают");
             }
 
-            var newUser = new User
+            var newUser = new Account
             {
                 Login = regLogin,
                 Password = regPassword // в идеале хэшируем

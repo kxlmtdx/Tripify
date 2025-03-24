@@ -1,0 +1,45 @@
+﻿@model List<TourFlow.Models.Account>
+
+@{
+    ViewData["AdminPanel"] = "AdminPanel";
+}
+
+<div class="main-container">
+    <div class="text-center">
+        <h2 style="font-weight: bold; margin: 30px; color:#efefef">Добро пожаловать в панель администратора</h2>
+        <a asp-controller="Admin" asp-action="Index" class="search-button" style="margin-top: 12px; width: 30%; text-decoration: none; color: #ffffff; text-align: center">
+            Войти
+        </a>
+    </div>
+
+    <a asp-controller="Adminpanel" asp-action="AddUser" class="search-button" style="margin-top: 12px; width: 70%; text-decoration: none; color: #ffffff; text-align: center">
+        Добавить пользователя
+    </a>
+
+    @if (Model != null && Model.Any())
+    {
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Логин</th>
+                        <th>Тип</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td>@user.Login</td>
+                            <td>@user.AccountType</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else
+    {
+        <p>Нет данных для отображения.</p>
+    }
+</div>

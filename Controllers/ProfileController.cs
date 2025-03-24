@@ -4,7 +4,7 @@ namespace TourFlow.Controllers
 {
     public class ProfileController : Controller
     {
-        public IActionResult Index()
+        public IActionResult ProfilePage()
         {
             return View();
         }

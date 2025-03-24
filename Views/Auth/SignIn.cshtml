@@ -23,7 +23,27 @@
                 </a>
             </div>
         </form>
-    </div>
+  @*   </div>
+
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Логин</th>
+                    <th>Тип</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model)
+                {
+                    <tr>
+                        <td>@user.Login</td>
+                        <td>@user.Type</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div> *@
 </div>
 
 
