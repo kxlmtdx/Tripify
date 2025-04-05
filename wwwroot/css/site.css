@@ -307,7 +307,20 @@ body {
     -webkit-overflow-scrolling: touch;
     width: 100%;
     margin-bottom: 15px;
+    border-radius: 10px;
 }
+
+    .table-responsive tr td:first-child,
+    .table-responsive tr th:first-child {
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+
+    .table-responsive tr td:last-child,
+    .table-responsive tr th:last-child {
+        border-top-right-radius: 10px;
+        border-bottom-right-radius: 10px;
+    }
 
 .table-container {
     border-radius: 20px;
@@ -328,12 +341,14 @@ body {
     .table-container td {
         padding: 0px;
         text-align: left;
+        border-radius: 10px;
     }
 
     .table-container th {
         background-color: rgba(255, 255, 255, 0.08);
         color: rgb(238, 239, 239);
         font-weight: bold;
+        border-radius: 10px;
     }
 
 /* Компактный контейнер внутри ячейки */
@@ -487,4 +502,64 @@ body {
     width: auto;
     height: 20px;
     filter: brightness(0) invert(1);
+}
+
+.admin-tabs {
+    display: flex;
+    position: relative;
+    background-color: #2e3035;
+    border-radius: 20px;
+    padding: 5px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+    .admin-tabs input[type="radio"] {
+        display: none;
+    }
+
+.admin-tab-button {
+    padding: 10px 20px;
+    border-radius: 15px;
+    cursor: pointer;
+    color: #efefef;
+    font-weight: 600;
+    z-index: 1;
+    transition: color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 1;
+    text-align: center;
+}
+
+.admin-tabs input[type="radio"]:checked + .admin-tab-button {
+    color: #141414;
+}
+
+.admin-tabs-slider {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    height: calc(100% - 10px);
+    width: calc(25%);
+    background-color: #8888d5;
+    border-radius: 15px;
+    transition: transform 0.3s ease;
+}
+
+.admin-tabs #accounts:checked ~ .admin-tabs-slider {
+    transform: translateX(0%);
+}
+
+.admin-tabs #tours:checked ~ .admin-tabs-slider {
+    transform: translateX(100%);
+}
+
+.admin-tabs #hotels:checked ~ .admin-tabs-slider {
+    transform: translateX(200%);
+}
+
+.admin-tabs #status:checked ~ .admin-tabs-slider {
+    transform: translateX(300%);
 }

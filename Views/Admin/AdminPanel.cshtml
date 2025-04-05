@@ -7,39 +7,83 @@
 <div class="main-container">
     <div class="text-center">
         <h2 style="font-weight: bold; margin: 30px; color:#efefef">Добро пожаловать в панель администратора</h2>
-        <a asp-controller="Admin" asp-action="Index" class="search-button" style="margin-top: 12px; width: 30%; text-decoration: none; color: #ffffff; text-align: center">
-            Войти
-        </a>
-    </div>
+        <div class="admin-tabs">
+            <input type="radio" id="accounts" name="admin-tabs" checked>
+            <label for="accounts" class="admin-tab-button">Аккаунты</label>
 
-    <a asp-controller="Adminpanel" asp-action="AddUser" class="search-button" style="margin-top: 12px; width: 70%; text-decoration: none; color: #ffffff; text-align: center">
-        Добавить пользователя
-    </a>
+            <input type="radio" id="tours" name="admin-tabs">
+            <label for="tours" class="admin-tab-button">Туры</label>
 
-    @if (Model != null && Model.Any())
-    {
-        <div class="table-responsive">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Логин</th>
-                        <th>Тип</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var user in Model)
-                    {
-                        <tr>
-                            <td>@user.Login</td>
-                            <td>@user.AccountType</td>
-                        </tr>
-                    }
-                </tbody>
-            </table>
+            <input type="radio" id="hotels" name="admin-tabs">
+            <label for="hotels" class="admin-tab-button">Отели</label>
+
+            <input type="radio" id="status" name="admin-tabs">
+            <label for="status" class="admin-tab-button">Статус</label>
+
+            <div class="admin-tabs-slider"></div>
         </div>
-    }
-    else
-    {
-        <p>Нет данных для отображения.</p>
-    }
+
+        <div id="accounts-content" class="admin-content active">
+            <!-- Контент для раздела Аккаунты -->
+            <div class="admin-card">
+                @if (Model != null && Model.Any())
+                {
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th style="color: #ffffff">Логин</th>
+                                    <th style="color: #ffffff">Тип</th>
+                                    <th style="color: #ffffff">Почта</th>
+                                    <th style="color: #ffffff">Редактировать</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var user in Model)
+                                {
+                                    <tr>
+                                        <td style="color: #ffffff">@user.Login</td>
+                                        <td style="color: #ffffff">@user.AccountType</td>
+                                        <td style="color: #ffffff">@user.Email</td>
+                                        <td width="20%">
+                                            <div class="w-20 h-10 btn-group" role="group">
+                                                <a asp-controller="AdminPanel" asp-action="Edit" asp-route-id="@user.Account_Id" class="btn btn-primary"><i></i>upd</a>
+                                                <a asp-controller="AdminPanel" asp-action="Delete" asp-route-id="@user.Account_Id" class="btn btn-primary"><i></i>del</a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+                else
+                {
+                    <p style="color: #ffffff">Нет данных для отображения.</p>
+                }
+            </div>
+        </div>
+
+        <div id="tours-content" class="admin-content">
+            <!-- Контент для раздела Туры -->
+            <div class="admin-card">
+                <p style="color: #ffffff">Раздел в разработке</p>
+            </div>
+        </div>
+
+        <div id="hotels-content" class="admin-content">
+            <!-- Контент для раздела Отели -->
+            <div class="admin-card">
+                <p style="color: #ffffff">Раздел в разработке</p>
+            </div>
+        </div>
+
+        <div id="status-content" class="admin-content">
+            <!-- Контент для раздела Статус -->
+            <div class="admin-card">
+                <p style="color: #ffffff">Раздел в разработке</p>
+            </div>
+        </div>
+    </div>
 </div>
+<script src="@Url.Content("~/js/anotherSwitch.js")"></script>

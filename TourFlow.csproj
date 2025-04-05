@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="wwwroot\js\anotherSwitch.js" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\js\anotherSwitch.js" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.20" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.20" />
   </ItemGroup>
@@ -14,6 +22,10 @@
   <ItemGroup>
     <Folder Include="Views\Tours\" />
     <Folder Include="Views\Flights\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\js\anotherSwitch.js" />
   </ItemGroup>
 
 </Project>
