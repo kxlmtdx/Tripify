@@ -11,4 +11,9 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.20" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Tours\" />
+    <Folder Include="Views\Flights\" />
+  </ItemGroup>
+
 </Project>

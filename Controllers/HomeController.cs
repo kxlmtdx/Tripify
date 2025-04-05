@@ -1,26 +1,39 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
+using TourFlow.Data;
 using TourFlow.Models;
 
 namespace TourFlow.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ApplicationDbContext _db;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ApplicationDbContext db)
         {
-            _logger = logger;
+            _db = db;
         }
 
-        public IActionResult RandomView()
+        public async Task<IActionResult> Index()
         {
-            //Вместо этой хероты вернём данные для рандомных карточек с направлениями
-            return View();
+            var directions = _db.Directions
+                .Where(d => d.Direction_Id >= 1 && d.Direction_Id <= 4)
+                .OrderBy(d => d.Direction_Id)
+                .ToList();
+
+            var cities = await _db.Directions
+                .Select(d => d.City)
+                .Distinct()
+                .ToListAsync();
+
+            ViewBag.Cities = cities;
+            return View(directions);
         }
 
-        public IActionResult Index()
+        public IActionResult SearchTours()
         {
+            // Логика обработки поиска (оставьте как есть)
             return View();
         }
 

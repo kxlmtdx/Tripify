@@ -73,10 +73,15 @@ body {
         font-weight: 400;
     }
 
-
+@media (max-width: 500px) {
+    .view-card {
+        flex: 1 0 100%;
+        min-width: unset;
+    }
+}
 
 .outer-container {
-    background-color: #1f1f1f;
+    background-color: #1d1e20;
     border-radius: 20px;
     padding: 20px;
     max-width: 1000px;
@@ -127,43 +132,38 @@ body {
     max-width: 550px;
     margin: 0 auto;
     width: 100%;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .search-container {
-    background-color: #1f1f1f;
-    border-radius: 15px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    padding: 20px;
-    max-width: 1000px;
-    width: 100%;
+    margin: 20px 0;
 }
 
 .search-form {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 15px;
+    background-color: rgba(255, 255, 255, 0.1);
+    padding: 20px;
+    border-radius: 10px;
 }
 
 .input-group {
-    flex: 1 1 calc(33.333% - 20px); /* Три поля в строке на ПК */
-    display: flex;
-    flex-direction: column;
+    flex: 1 1 250px;
+    min-width: 250px; 
+    
 }
 
-    .input-group label {
-        font-size: 14px;
-        color: #ffffff;
-        margin-bottom: 5px;
-    }
-
-    .input-group input {
-        padding: 10px;
+    .input-group input,
+    .input-group select {
+        padding: 9px;
         border: 1px solid #cccccc;
         border-radius: 5px;
         font-size: 16px;
         width: 100%;
         background-color: #ffffff;
         outline: none;
+        font-family: inherit; 
     }
 
 .date-input {
@@ -172,11 +172,11 @@ body {
 }
 
 .search-button {
-    background-color: #f58142;
+    background-color: #8888d5;
     color: #ffffff;
     border: none;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 10px;
     font-size: 16px;
     cursor: pointer;
     flex: 1 1 100%;
@@ -184,27 +184,24 @@ body {
 }
 
     .search-button:hover {
-        background-color: #e5733a;
+        background-color: #7979cd;
     }
 
-/* Адаптация для мобилок */
-@media (max-width: 600px) {
-    .input-group {
-        flex: 1 1 100%;
-    }
-
-    .search-button {
-        flex: 1 1 100%;
+@media (max-width: 768px) {
+    .input-group input,
+    .input-group select {
+        font-size: 16px; 
+        -webkit-appearance: none; 
     }
 }
 
 .more-button {
-    background-color: #f58142;
-    color: #ffffff;
+    background-color: #fff;
+    color: #000;
     display: flex;
     border: none;
     padding: 10px 20px;
-    border-radius: 5px;
+    border-radius: 15px;
     font-size: 14px;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -217,11 +214,11 @@ body {
     border-radius: 20px;
     padding: 5px;
     margin-bottom: 20px;
-    width: stretch; /* Растягиваем на всю доступную ширину */
+    width: stretch;
 }
 
     .slider-container input[type="radio"] {
-        display: none; /* Скрываем радиокнопки */
+        display: none;
     }
 
 .slider-button {
@@ -232,14 +229,14 @@ body {
     font-weight: 600;
     z-index: 1;
     transition: color 0.3s ease;
-    display: flex; /* Добавляем flex для центрирования */
-    align-items: center; /* Центрируем текст по вертикали */
-    justify-content: center; /* Центрируем текст по горизонтали */
-    flex: 1; /* Равномерное распределение пространства */
+    display: flex;
+    align-items: center;
+    justify-content: center; 
+    flex: 1;
 }
 
 .slider-container input[type="radio"]:checked + .slider-button {
-    color: #141414; /* Цвет текста для активной кнопки */
+    color: #141414;
 }
 
 .slider-track {
@@ -248,17 +245,17 @@ body {
     left: 5px;
     height: calc(100% - 10px);
     width: calc(50% - 10px);
-    background-color: #f58142;
+    background-color: #8888d5;
     border-radius: 15px;
     transition: transform 0.3s ease;
 }
 
 .slider-container #active:checked ~ .slider-track {
-    transform: translateX(0); /* Позиция трека для "Активные" */
+    transform: translateX(0);
 }
 
 .slider-container #archived:checked ~ .slider-track {
-    transform: translateX(100%); /* Позиция трека для "Архив" */
+    transform: translateX(102%);
 }
 
 .table {
@@ -312,7 +309,6 @@ body {
     margin-bottom: 15px;
 }
 
-/* Основной контейнер таблицы */
 .table-container {
     border-radius: 20px;
     padding: 12px;
@@ -334,7 +330,6 @@ body {
         text-align: left;
     }
 
-    /* Заголовок таблицы */
     .table-container th {
         background-color: rgba(255, 255, 255, 0.08);
         color: rgb(238, 239, 239);
@@ -348,7 +343,6 @@ body {
     gap: 12px;
 }
 
-/* Строка с ценами */
 .price-row {
     display: flex;
     gap: 6px;
@@ -482,4 +476,15 @@ body {
     border-radius: 12px;
     padding: 16px;
     margin-bottom: 8px;
+}
+
+.vertical-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.document-icon {
+    width: auto;
+    height: 20px;
+    filter: brightness(0) invert(1);
 }

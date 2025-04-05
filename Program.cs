@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using TourFlow.Data;
@@ -17,6 +18,13 @@ namespace TourFlow
               builder.Configuration.GetConnectionString("DefaultConnection") // this tells the exact database to use
                   ));
 
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Auth/SignIn";
+                    options.AccessDeniedPath = "/Auth/AccessDenied";
+                });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -32,6 +40,7 @@ namespace TourFlow
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(

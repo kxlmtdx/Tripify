@@ -1,4 +1,5 @@
-﻿@{
+﻿@model List<TourFlow.Models.Direction>
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -15,76 +16,64 @@
 <body>
     <div class="main-container">
         <div class="text-center">
-            <h2 style="font-weight: bold; margin: 30px; color:#efefef">Ваше путешествие начинается здесь.</h2>
+            <h2 style="font-weight: bold; margin: 32px; color:#efefef;">Ваше путешествие начинается здесь.</h2>
 
             <div class="search-container">
-                <div class="search-form">
-                    <div class="input-group">
-                        <input type="text" id="from" placeholder="Откуда?">
-                    </div>
+                <form asp-action="SearchTours" asp-controller="Home" method="get">
+                    <div class="search-form">
+                        <div class="input-group">
+                            <select name="from" id="from" class="form-control">
+                                <option value="">Откуда?</option>
+                                @foreach (var city in ViewBag.Cities)
+                                {
+                                    <option value="@city">@city</option>
+                                }
+                            </select>
+                        </div>
 
-                    <div class="input-group">
-                        <input type="text" id="to" placeholder="Куда?">
-                    </div>
+                        <div class="input-group">
+                            <select name="to" id="to" class="form-control">
+                                <option value="">Куда?</option>
+                                @foreach (var city in ViewBag.Cities)
+                                {
+                                    <option value="@city">@city</option>
+                                }
+                            </select>
+                        </div>
 
-                    <div class="input-group">
-                        <input type="text" id="date" placeholder="Дата?" class="date-input">
-                    </div>
+                        <div class="input-group">
+                            <input type="text" name="date" id="date" placeholder="Дата?" class="form-control date-input"
+                                   value="@Context.Request.Query["date"]">
+                        </div>
 
-                    <button class="search-button">Найти билеты</button>
-                </div>
+                        <button class="search-button btn btn-primary">Найти билеты и отель</button>
+                    </div>
+                </form>
             </div>
 
             <div class="view-card" style="flex: 1 1 auto; width: 100%; margin-top: 30px; background-image: url(https://i.pinimg.com/736x/99/25/9a/99259a2ff18eceead3b0b15bb7b63eed.jpg);">
                 <div class="info">
                     <h4>🔥 Горячие туры</h4>
                     <h6 style="margin-left: 3px">Успей оформить пока не разобрали!</h6>
-                    <button class="more-button" style="margin-top: 8px;">Узнать больше</button>
+                    <button class="more-button" style="margin-top: 8px; background: ">Узнать больше</button>
                 </div>
             </div>
 
             <div class="outer-container" style="margin-top:40px">
                 <h5 style="color:#efefef; font-weight:bold; text-align: left; margin-left: 5px">Популярные направления</h5>
                 <div class="horizontal-container">
-                    <div class="view-card" style="background:#2e3035;">
-                        <div class="info">
-                            <div class="simplehorizontal-container">
-                                <h4>Колломбо</h4>
-                                <h6 style="color: #88a1d5"> от 10 409₽</h6>
+                    @foreach (var direction in Model)
+                    {
+                        <div class="view-card" style="background:#2e3035;">
+                            <div class="info">
+                                <div class="simplehorizontal-container">
+                                    <h4>@direction.City</h4>
+                                    <h6 style="color: #88a1d5"> от 10 409₽</h6>
+                                </div>
+                                <h6>@direction.Country</h6>
                             </div>
-                            <h6>Шри-Ланка</h6>
                         </div>
-                    </div>
-
-                    <div class="view-card" style="background:#2e3035;">
-                        <div class="info">
-                            <div class="simplehorizontal-container">
-                                <h4>Мале</h4>
-                                <h6 style="color: #88a1d5"> от 8 954₽</h6>
-                            </div>
-                            <h6>Мальдивы</h6>
-                        </div>
-                    </div>
-
-                    <div class="view-card" style="background:#2e3035;">
-                        <div class="info">
-                            <div class="simplehorizontal-container">
-                                <h4>Ташкент</h4>
-                                <h6 style="color: #88a1d5"> от 7 087₽</h6>
-                            </div>
-                            <h6>Узбекистан</h6>
-                        </div>
-                    </div>
-
-                    <div class="view-card" style="background:#2e3035;">
-                        <div class="info">
-                            <div class="simplehorizontal-container">
-                                <h4>Бангкок</h4>
-                                <h6 style="color: #88a1d5"> от 1 050₽</h6>
-                            </div>
-                            <h6>Таиланд</h6>
-                        </div>
-                    </div>
+                    }
                 </div>
             </div>
         </div>
