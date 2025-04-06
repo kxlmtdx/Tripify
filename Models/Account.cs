@@ -24,6 +24,9 @@ namespace TourFlow.Models
         [ForeignKey("AccountType")]
         public int Account_Type_Id { get; set; }
 
+        [StringLength(50)]
+        public string? fName { get; set; }
+
         public AccountType AccountType { get; set; }
         public List<Booking> Bookings { get; set; } = new List<Booking>();
         public List<User_Document> User_Documents { get; set; } = new List<User_Document>();

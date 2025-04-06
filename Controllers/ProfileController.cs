@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TourFlow.Data;
+using TourFlow.Models;
 
 namespace TourFlow.Controllers
 {
@@ -16,7 +17,6 @@ namespace TourFlow.Controllers
 
         public async Task<ActionResult> ProfilePage()
         {
-            // Получаем логин текущего пользователя из claims
             var userLogin = User.FindFirstValue(ClaimTypes.Name);
 
             if (string.IsNullOrEmpty(userLogin))
@@ -24,7 +24,6 @@ namespace TourFlow.Controllers
                 return RedirectToAction("SignIn", "Auth");
             }
 
-            // Получаем данные пользователя из базы данных
             var user = await _context.Accounts
                 .Include(a => a.User_Documents)
                 .FirstOrDefaultAsync(a => a.Login == userLogin);
@@ -44,6 +43,82 @@ namespace TourFlow.Controllers
             };
 
             return View(user);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> EditProfile()
+        {
+            var userLogin = User.FindFirstValue(ClaimTypes.Name);
+
+            if (string.IsNullOrEmpty(userLogin))
+            {
+                return RedirectToAction("SignIn", "Auth");
+            }
+
+            var user = await _context.Accounts
+                .FirstOrDefaultAsync(a => a.Login == userLogin);
+
+            if (user == null)
+            {
+                return NotFound("Пользователь не найден");
+            }
+
+            return View(user);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> EditProfile(Account model)
+        {
+            // костылим
+            ModelState.Remove("Login");
+            ModelState.Remove("Password");
+            ModelState.Remove("AccountType");
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var userLogin = User.FindFirstValue(ClaimTypes.Name);
+            var user = await _context.Accounts.FirstOrDefaultAsync(a => a.Login == userLogin);
+
+            if (user == null)
+            {
+                return NotFound("Пользователь не найден");
+            }
+
+            // костылим
+            model.Login = user.Login;
+            model.Password = user.Password;
+            model.AccountType = user.AccountType;
+
+            user.fName = model.fName;
+            user.Email = model.Email;
+
+            try
+            {
+                _context.Accounts.Update(user);
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Профиль успешно обновлен";
+                return RedirectToAction("ProfilePage");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Ошибка при обновлении профиля: " + ex.Message);
+                return View(model);
+            }
+        }
+
+        // после добавления куков меняем всё нахуй
+        public ActionResult ExitProfile()
+        {
+            return RedirectToAction("Index", "Home");
+        }
+
+        public ActionResult AddDocuments()
+        {
+            return View();
         }
     }
 }

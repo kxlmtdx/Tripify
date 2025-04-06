@@ -33,7 +33,7 @@ namespace TourFlow.Controllers
 
         public IActionResult SearchTours()
         {
-            // Логика обработки поиска (оставьте как есть)
+            // Логика обработки поиска
             return View();
         }
 

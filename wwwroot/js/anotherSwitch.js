@@ -1,23 +1,28 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
     console.log('Админ-панель: DOM полностью загружен');
 
-    const accountsTab = document.getElementById('accounts');
-    const toursTab = document.getElementById('tours');
-    const hotelsTab = document.getElementById('hotels');
-    const statusTab = document.getElementById('status');
+    const elements = {
+        tabs: {
+            accounts: document.getElementById('accounts'),
+            tours: document.getElementById('tours'),
+            hotels: document.getElementById('hotels'),
+            status: document.getElementById('status')
+        },
+        content: {
+            accounts: document.getElementById('accounts-content'),
+            tours: document.getElementById('tours-content'),
+            hotels: document.getElementById('hotels-content'),
+            status: document.getElementById('status-content')
+        }
+    };
 
-    const accountsContent = document.getElementById('accounts-content');
-    const toursContent = document.getElementById('tours-content');
-    const hotelsContent = document.getElementById('hotels-content');
-    const statusContent = document.getElementById('status-content');
 
-    const elements = [accountsTab, toursTab, hotelsTab, statusTab,
-        accountsContent, toursContent, hotelsContent, statusContent];
-
-    for (const el of elements) {
-        if (!el) {
-            console.error('undefined');
-            return;
+    for (const type in elements) {
+        for (const key in elements[type]) {
+            if (!elements[type][key]) {
+                console.error('Element not found:', key);
+                return;
+            }
         }
     }
     console.log('Все элементы управления найдены');
@@ -25,25 +30,24 @@
     function switchTabs() {
         console.log('Переключение вкладок...');
 
-        accountsContent.style.display = 'none';
-        toursContent.style.display = 'none';
-        hotelsContent.style.display = 'none';
-        statusContent.style.display = 'none';
+        for (const key in elements.content) {
+            elements.content[key].style.display = 'none';
+        }
 
-        if (accountsTab.checked) {
-            accountsContent.style.display = 'block';
+        if (elements.tabs.accounts.checked) {
+            elements.content.accounts.style.display = 'block';
             console.log('Показан раздел "Аккаунты"');
         }
-        else if (toursTab.checked) {
-            toursContent.style.display = 'block';
+        else if (elements.tabs.tours.checked) {
+            elements.content.tours.style.display = 'block';
             console.log('Показан раздел "Туры"');
         }
-        else if (hotelsTab.checked) {
-            hotelsContent.style.display = 'block';
+        else if (elements.tabs.hotels.checked) {
+            elements.content.hotels.style.display = 'block';
             console.log('Показан раздел "Отели"');
         }
-        else if (statusTab.checked) {
-            statusContent.style.display = 'block';
+        else if (elements.tabs.status.checked) {
+            elements.content.status.style.display = 'block';
             console.log('Показан раздел "Статус"');
         }
 
@@ -58,10 +62,18 @@
         }
 
         let activeLabel;
-        if (accountsTab.checked) activeLabel = document.querySelector('label[for="accounts"]');
-        else if (toursTab.checked) activeLabel = document.querySelector('label[for="tours"]');
-        else if (hotelsTab.checked) activeLabel = document.querySelector('label[for="hotels"]');
-        else if (statusTab.checked) activeLabel = document.querySelector('label[for="status"]');
+        if (elements.tabs.accounts.checked) {
+            activeLabel = document.querySelector('label[for="accounts"]');
+        }
+        else if (elements.tabs.tours.checked) {
+            activeLabel = document.querySelector('label[for="tours"]');
+        }
+        else if (elements.tabs.hotels.checked) {
+            activeLabel = document.querySelector('label[for="hotels"]');
+        }
+        else if (elements.tabs.status.checked) {
+            activeLabel = document.querySelector('label[for="status"]');
+        }
 
         if (activeLabel) {
             slider.style.width = activeLabel.offsetWidth + 'px';
@@ -69,11 +81,10 @@
             console.log(`Слайдер перемещен к "${activeLabel.textContent}"`);
         }
     }
-    u
-    accountsTab.addEventListener('change', switchTabs);
-    toursTab.addEventListener('change', switchTabs);
-    hotelsTab.addEventListener('change', switchTabs);
-    statusTab.addEventListener('change', switchTabs);
+
+    for (const key in elements.tabs) {
+        elements.tabs[key].addEventListener('change', switchTabs);
+    }
 
     console.log('Обработчики событий назначены');
 

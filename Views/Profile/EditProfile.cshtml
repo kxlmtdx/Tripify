@@ -1,0 +1,44 @@
+﻿@{
+    ViewData["Title"] = "Редактирование профиля";
+    @model Account
+
+}
+
+<div class="main-container" style="color: #ffffff">
+    <div class="row pb-2">
+        <h2 style="color: #ffffff;">Редактирование профиля</h2>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+
+    <div class="outer-container">
+        <form method="post">
+            <input type="hidden" asp-for="Login" />
+            <input type="hidden" asp-for="Password" />
+            <input type="hidden" asp-for="AccountType" />
+
+            <div class="mb-3">
+                <label asp-for="fName">Имя</label>
+                <input asp-for="fName" class="form-control" />
+                <span asp-validation-for="fName" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Email">Почта</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Сохранить</button>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
