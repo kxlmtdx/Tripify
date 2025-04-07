@@ -20,11 +20,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Views\Tours\" />
-    <Folder Include="Views\Flights\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\js\anotherSwitch.js" />
   </ItemGroup>
 

@@ -14,16 +14,30 @@ namespace TourFlow
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
-            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(
-              builder.Configuration.GetConnectionString("DefaultConnection") // this tells the exact database to use
-                  ));
+            builder.Services.AddDbContext<ApplicationDbContext>(options =>
+                options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(options =>
                 {
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                    options.Cookie.SameSite = SameSiteMode.Strict;
+                    options.ExpireTimeSpan = TimeSpan.FromDays(30);
                     options.LoginPath = "/Auth/SignIn";
                     options.AccessDeniedPath = "/Auth/AccessDenied";
+                    options.SlidingExpiration = true;
+                    options.ReturnUrlParameter = "returnUrl";
                 });
+
+            builder.Services.Configure<CookiePolicyOptions>(options =>
+            {
+                options.MinimumSameSitePolicy = SameSiteMode.Strict;
+                options.HttpOnly = Microsoft.AspNetCore.CookiePolicy.HttpOnlyPolicy.Always;
+                options.Secure = CookieSecurePolicy.Always;
+            });
+
+            builder.Services.AddAuthorization();
 
             var app = builder.Build();
 
@@ -31,8 +45,11 @@ namespace TourFlow
             if (!app.Environment.IsDevelopment())
             {
                 app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                app.UseHsts(); // HTTP Strict Transport Security
+            }
+            else
+            {
+                app.UseDeveloperExceptionPage();
             }
 
             app.UseHttpsRedirection();
@@ -42,6 +59,8 @@ namespace TourFlow
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseCookiePolicy();
 
             app.MapControllerRoute(
                 name: "default",

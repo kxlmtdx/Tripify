@@ -14,11 +14,13 @@ namespace TourFlow.Data
         public DbSet<Tour> Tours { get; set; }
         public DbSet<TourType> ToursType { get; set; }
         public DbSet<Airline> Airlines { get; set; }
-        public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Booking> Booking { get; set; }
         public DbSet<BookingStatusType> BookingStatusTypes { get; set; }
         public DbSet<User_Document> User_Documents { get; set; }
         public DbSet<DocumentType> DocumentsType { get; set; }
-        
+        public DbSet<FlightTicket> Flight_Tickets { get; set; }
+        public DbSet<FlightType> Flight_Types { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
@@ -54,7 +56,7 @@ namespace TourFlow.Data
                 .HasForeignKey(t => t.Tour_Type_Id);
 
             modelBuilder.Entity<Booking>()
-                .HasOne(b => b.Accont)
+                .HasOne(b => b.Account)
                 .WithMany(a => a.Bookings)
                 .HasForeignKey(b => b.Account_Id);
 
@@ -82,6 +84,21 @@ namespace TourFlow.Data
                 .HasOne(d => d.Document_Type)
                 .WithMany()
                 .HasForeignKey(d => d.Document_Type_Id);
+
+            modelBuilder.Entity<FlightTicket>()
+               .HasOne(ft => ft.Booking)
+               .WithMany(b => b.FlightTickets)
+               .HasForeignKey(ft => ft.Booking_Id);
+
+            modelBuilder.Entity<FlightTicket>()
+                .HasOne(ft => ft.FlightType)
+                .WithMany()
+                .HasForeignKey(ft => ft.Flight_Type_Id);
+
+            modelBuilder.Entity<FlightTicket>()
+                .HasOne(ft => ft.Airline)
+                .WithMany(a => a.FlightTickets)
+                .HasForeignKey(ft => ft.Airline_Id);
         }
     }
 }

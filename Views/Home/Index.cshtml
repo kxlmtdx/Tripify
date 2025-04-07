@@ -17,9 +17,8 @@
     <div class="main-container">
         <div class="text-center">
             <h2 style="font-weight: bold; margin: 32px; color:#efefef;">Ваше путешествие начинается здесь.</h2>
-
             <div class="search-container">
-                <form asp-action="SearchTours" asp-controller="Home" method="get">
+                <form asp-action="FlightsList" asp-controller="Flights" method="get">
                     <div class="search-form">
                         <div class="input-group">
                             <select name="from" id="from" class="form-control">
@@ -42,11 +41,11 @@
                         </div>
 
                         <div class="input-group">
-                            <input type="text" name="date" id="date" placeholder="Дата?" class="form-control date-input"
+                            <input type="date" name="date" id="date" placeholder="Дата?" class="form-control date-input"
                                    value="@Context.Request.Query["date"]">
                         </div>
 
-                        <button class="search-button btn btn-primary">Найти билеты и отель</button>
+                        <button class="search-button btn btn-primary">Найти билеты</button>
                     </div>
                 </form>
             </div>

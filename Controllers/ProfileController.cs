@@ -1,11 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using TourFlow.Data;
 using TourFlow.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TourFlow.Controllers
 {
+    [Authorize]
     public class ProfileController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -110,9 +114,9 @@ namespace TourFlow.Controllers
             }
         }
 
-        // после добавления куков меняем всё нахуй
-        public ActionResult ExitProfile()
+        public async Task<IActionResult> ExitProfile()
         {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Index", "Home");
         }
 

@@ -21,6 +21,35 @@ body {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
+.form-control {
+    background-color: #3a3a3a !important;
+    border: 1px solid #4a4a4a !important;
+    color: #ffffff !important;
+    box-shadow: none !important;
+    transition: all 0.3s ease;
+}
+
+    .form-control:focus {
+        border-color: #4a4a4a !important;
+        box-shadow: none !important;
+        outline: 0 !important;
+    }
+
+    .form-control:active {
+        border-color: #4a4a4a !important;
+        box-shadow: none !important;
+    }
+
+    .form-control:disabled {
+        background-color: #2a2a2a !important;
+        color: #777777 !important;
+    }
+
+    .form-control[readonly] {
+        background-color: #3a3a3a !important;
+        color: #ffffff !important;
+    }
+
 .view-card {
     display: flex;
     align-items: center;
@@ -143,7 +172,7 @@ body {
     display: flex;
     flex-wrap: wrap;
     gap: 15px;
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: #1d1e20;
     padding: 20px;
     border-radius: 10px;
 }
@@ -324,8 +353,7 @@ body {
 
 .table-container {
     border-radius: 20px;
-    padding: 12px;
-    background-color: rgb(61, 63, 67);
+    background-color: transparent;
     font-family: -apple-system, BlinkMacSystemFont, Inter, Roboto, Helvetica, Arial, sans-serif;
     font-size: 16px;
     line-height: 28px;
@@ -345,9 +373,23 @@ body {
     }
 
     .table-container th {
-        background-color: rgba(255, 255, 255, 0.08);
+        background-color: transparent;
         color: rgb(238, 239, 239);
         font-weight: bold;
+        border-radius: 10px;
+    }
+
+    .table-container tbody tr {
+        margin-bottom: 12px; /* Отступ между строками */
+        display: block; /* Для работы margin */
+        width: 100%;
+    }
+
+    .table-container td {
+        display: block;
+        width: 100%;
+        padding: 16px;
+        background: #1d1e20;
         border-radius: 10px;
     }
 
@@ -562,4 +604,82 @@ body {
 
 .admin-tabs #status:checked ~ .admin-tabs-slider {
     transform: translateX(300%);
+}
+
+.ticket-details {
+    background-color: #1d1e20;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 700px;
+    margin: 0 auto;
+    color: #ffffff;
+}
+
+.ticket-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.price {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.route-info {
+    margin-bottom: 20px;
+}
+
+.cities {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.date {
+    color: #aaaaaa;
+}
+
+.flight-details {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.departure, .arrival {
+    text-align: center;
+}
+
+.time {
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.airport {
+    color: #aaaaaa;
+}
+
+.duration {
+    text-align: center;
+    color: #aaaaaa;
+}
+
+.flight-type {
+    padding: 5px 10px;
+    background-color: #3a3a3a;
+    border-radius: 10px;
+    display: inline-block;
+    margin-bottom: 20px;
+}
+
+.purchase-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 18px;
+    margin-top: 20px;
+}
+
+.form-group label {
+    color: #ffffff;
 }

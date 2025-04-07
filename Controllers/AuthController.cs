@@ -9,6 +9,7 @@ using System.IO;
 using System.Security.Claims;
 using TourFlow.Data;
 using TourFlow.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace TourFlow.Controllers
 {
@@ -29,6 +30,13 @@ namespace TourFlow.Controllers
 
         public IActionResult SignIn()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                var isAdmin = User.IsInRole("Admin");
+                return RedirectToAction(isAdmin ? "AdminPanel" : "ProfilePage",
+                                     isAdmin ? "Admin" : "Profile");
+            }
+
             var users = _db.Accounts.ToList();
             return View(users);
         }
@@ -125,11 +133,20 @@ namespace TourFlow.Controllers
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Login),
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.Role, user.Account_Type_Id == 1 ? "Admin" : "User")
             };
 
-            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            var authProperties = new AuthenticationProperties();
+            var claimsIdentity = new ClaimsIdentity(
+                claims,
+                CookieAuthenticationDefaults.AuthenticationScheme);
+
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = true,
+                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(30),
+                AllowRefresh = true
+            };
 
             await HttpContext.SignInAsync(
                 CookieAuthenticationDefaults.AuthenticationScheme,

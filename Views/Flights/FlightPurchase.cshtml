@@ -1,0 +1,145 @@
+﻿@model FlightTicket
+@using System.Globalization
+@{
+    ViewData["Title"] = "Покупка билета";
+}
+
+<div class="main-container">
+    <div class="text-center">
+        <h2 style="font-weight: bold; margin: 32px; color:#efefef;">Покупка билета.</h2>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <div class="ticket-details">
+        <div class="ticket-header">
+            <div class="airline-logo">
+                <img alt="@Model.Airline.Airline_Name"
+                     src="https://i.imgur.com/tW5JOLU.png"
+                     class="airline-img" />
+            </div>
+            <div class="price">@Model.Price.ToString("N0") ₽</div>
+        </div>
+
+        <div class="route-info">
+            <div class="cities">@Model.Departure_City → @Model.Arrival_City</div>
+            <div class="date">
+                @{
+                    var russianCulture = new CultureInfo("ru-RU");
+                    var monthName = russianCulture.DateTimeFormat.GetMonthName(Model.Departure_Date.Month);
+                }
+                @Model.Departure_Date.Day @monthName.ToLower()
+            </div>
+        </div>
+
+        <div class="flight-details">
+            <div class="departure">
+                <div class="time">@Model.Departure_Time.ToString("hh\\:mm")</div>
+                <div class="airport">@GetAirportCode(Model.Departure_City)</div>
+            </div>
+            <div class="duration">
+                @{
+                    var duration = Model.Arrival_Time - Model.Departure_Time;
+                }
+                @duration.Hours ч @duration.Minutes мин
+            </div>
+            <div class="arrival">
+                <div class="time">@Model.Arrival_Time.ToString("hh\\:mm")</div>
+                <div class="airport">@GetAirportCode(Model.Arrival_City)</div>
+            </div>
+        </div>
+
+        <div class="flight-type">@Model.FlightType.Type_Name</div>
+
+        <form asp-action="ConfirmPurchase" method="post">
+            <input type="hidden" name="id" value="@Model.Ticket_Id" />
+
+            <div class="search-form" style="padding: 0px; display: flex; gap: 16px;">
+                <div class="form-group" style="flex: 1;">
+                    <label for="passengerName">ФИО пассажира</label>
+                    @if (User.Identity.IsAuthenticated && ViewBag.Passport != null)
+                    {
+                        var passport = ViewBag.Passport as User_Document;
+                        <input type="text" id="passengerName" name="passengerName"
+                               class="form-control"
+                               value="@($"{passport.Last_Name} {passport.First_Name}")"
+                               required />
+                    }
+                    else
+                    {
+                        <input type="text" id="passengerName" name="passengerName"
+                               class="form-control" required />
+                    }
+                </div>
+
+                <div class="form-group" style="flex: 1;">
+                    <label for="passportNumber">Номер паспорта</label>
+                    @if (User.Identity.IsAuthenticated && ViewBag.Passport != null)
+                    {
+                        var passport = ViewBag.Passport as User_Document;
+                        <input type="text" id="passportNumber" name="passportNumber"
+                               class="form-control"
+                               value="@passport.Document_Number"
+                               required />
+                    }
+                    else
+                    {
+                        <input type="text" id="passportNumber" name="passportNumber"
+                               class="form-control" required />
+                    }
+                </div>
+            </div>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="text-center">
+                    @if (ViewBag.Passport != null)
+                    {
+                        <span style="color: gray; font-size: 12px">
+                            Используются данные из привязанного паспорта.
+                            <a asp-controller="Profile" asp-action="Documents">Изменить</a>
+                        </span>
+                    }
+                    else
+                    {
+                        <span style="color: gray; font-size: 12px">
+                            <a asp-controller="Profile" asp-action="Documents">Привязать документы</a>
+                            для автоматического заполнения
+                        </span>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center">
+                    <span style="color: gray; font-size: 12px">
+                        <a asp-controller="Auth" asp-action="SignIn">Войдите</a>,
+                        чтобы использовать привязанные документы
+                    </span>
+                </div>
+            }
+
+            <button type="submit" class="search-button purchase-button">Купить билет</button>
+        </form>
+    </div>
+</div>
+
+@* убрать *@
+@functions {
+    public string GetAirportCode(string city)
+    {
+        return city switch
+        {
+            "Москва" => "SVO",
+            "Санкт-Петербург" => "LED",
+            "Абакан" => "ABA",
+            "Домодедово" => "DME",
+            _ => city.Length >= 3 ? city.Substring(0, 3).ToUpper() : city.ToUpper()
+        };
+    }
+}

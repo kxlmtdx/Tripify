@@ -31,9 +31,8 @@ namespace TourFlow.Controllers
             return View(directions);
         }
 
-        public IActionResult SearchTours()
+        public IActionResult FlightsList()
         {
-            // Логика обработки поиска
             return View();
         }
 

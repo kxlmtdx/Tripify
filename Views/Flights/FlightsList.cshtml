@@ -1,0 +1,144 @@
+﻿@model IEnumerable<FlightTicket>
+@using System.Globalization
+@{
+    ViewData["Title"] = "Результаты поиска авиабилетов";
+}
+
+<div class="main-container">
+    <div class="text-center">
+        <h2 style="font-weight: bold; margin: 32px; color:#efefef;">Поиск авиабилетов.</h2>
+    </div>
+    <div class="search-container">
+        <form asp-action="FlightsList" asp-controller="Flights" method="get">
+            <div class="search-form">
+                <div class="input-group">
+                    <select name="from" id="from" class="form-control">
+                        <option value="">Откуда?</option>
+                        @foreach (var city in ViewBag.Cities)
+                        {
+                            <option value="@city" selected="@(Context.Request.Query["from"] == city)">@city</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <select name="to" id="to" class="form-control">
+                        <option value="">Куда?</option>
+                        @foreach (var city in ViewBag.Cities)
+                        {
+                            <option value="@city" selected="@(Context.Request.Query["to"] == city)">@city</option>
+                        }
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <input type="text" name="date" id="date" placeholder="Дата?" class="form-control date-input"
+                           value="@Context.Request.Query["date"]">
+                </div>
+
+                <button class="search-button btn btn-primary">Найти билеты</button>
+            </div>
+        </form>
+    </div>
+
+        @if (Model.Any())
+    {
+        <div class="table-container" style="width: auto">
+            <table>
+                <thead>
+                    <tr>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var ticket in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a asp-action="FlightPurchase" asp-controller="Flights" asp-route-id="@ticket.Ticket_Id" class="ticket-link">
+                                    <div class="compact-container">
+                                        <div class="price-row">
+                                            <div class="current-price">@ticket.Price.ToString("N0") ₽</div>
+                                            @if (ticket.Price < 20000)
+                                            {
+                                                <div class="old-price">@((ticket.Price * 1.2m).ToString("N0")) ₽</div>
+                                            }
+                                            <div class="airline-logo" style="margin-left: auto">
+                                                <img alt="@ticket.Airline.Airline_Name"
+                                                     src="https://i.imgur.com/tW5JOLU.png"
+                                                     class="airline-img" />
+                                            </div>
+                                        </div>
+                                        <div class="info-row">
+                                            <div class="route">@ticket.Departure_City — @ticket.Arrival_City</div>
+                                        </div>
+                                        <div class="details-row">
+                                            <div class="calendar">
+                                                @{
+                                                    var russianCulture = new CultureInfo("ru-RU");
+                                                    var monthName = russianCulture.DateTimeFormat.GetMonthName(ticket.Departure_Date.Month);
+                                                }
+                                                <div class="month">@monthName.ToLower()</div>
+                                                <div class="day">@ticket.Departure_Date.Day</div>
+                                            </div>
+                                            <div class="time-info">
+                                                <div class="departure">
+                                                    <div class="time">@ticket.Departure_Time.ToString("hh\\:mm")</div>
+                                                    <div class="airport">@GetAirportCode(ticket.Departure_City)</div>
+                                                </div>
+                                                <div class="arrival">
+                                                    <div class="time">@ticket.Arrival_Time.ToString("hh\\:mm")</div>
+                                                    <div class="airport">@GetAirportCode(ticket.Arrival_City)</div>
+                                                </div>
+                                            </div>
+                                            <div class="duration">
+                                                @{
+                                                    var duration = ticket.Arrival_Time - ticket.Departure_Time;
+                                                    var hours = duration.Hours;
+                                                    var minutes = duration.Minutes;
+                                                }
+                                                @hours ⁠ч @minutes мин в пути
+                                                <span class="separator">/</span>
+                                                @ticket.FlightType.Type_Name
+                                            </div>
+                                        </div>
+                                    </div>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+    else if (!string.IsNullOrEmpty(Context.Request.Query["from"]) ||
+             !string.IsNullOrEmpty(Context.Request.Query["to"]) ||
+             !string.IsNullOrEmpty(Context.Request.Query["date"]))
+    {
+        <div class="outer-container" style="width: auto">
+            <div class="text-center">
+                <img src="https://i.imgur.com/Nt7Y5uE.png" alt="Описание изображения" width="130" height="130" style="margin: 0px 0px 10px 0px">
+                <h4 style="color: #ffffff">Похоже, из этого города мало куда можно улететь</h4>
+                <h5 style="color: #ffffff">Попробуйте поискать рейсы из чуть более крупного города неподалёку, и подходящие билеты наверняка найдутся</h5>
+            </div>
+        </div>
+        @* <div class="alert alert-info">
+            По вашему запросу билетов не найдено. Попробуйте изменить параметры поиска.
+        </div> *@
+    }
+</div>
+
+@* убрать *@
+@functions {
+    public string GetAirportCode(string city)
+    {
+        return city switch
+        {
+            "Москва" => "SVO",
+            "Санкт-Петербург" => "LED",
+            "Абакан" => "ABA",
+            "Домодедово" => "DME",
+            _ => city.Length >= 3 ? city.Substring(0, 3).ToUpper() : city.ToUpper()
+        };
+    }
+}

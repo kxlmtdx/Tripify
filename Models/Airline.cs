@@ -14,5 +14,6 @@ namespace TourFlow.Models
         [Required]
         [StringLength(3)]
         public string IATA_Code { get; set; }
+        public List<FlightTicket> FlightTickets { get; set; } = new List<FlightTicket>();
     }
 }
