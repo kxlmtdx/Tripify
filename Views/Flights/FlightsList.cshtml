@@ -1,7 +1,26 @@
-﻿@model IEnumerable<FlightTicket>
+﻿@model IEnumerable<TourFlow.Models.FlightTicket>
 @using System.Globalization
+@using Microsoft.EntityFrameworkCore
+@using TourFlow.Data
+@inject ApplicationDbContext _db
 @{
     ViewData["Title"] = "Результаты поиска авиабилетов";
+
+
+    // выкинуть нахуй при первой возможности
+    string GetAirportCode(string city)
+    {
+        if (string.IsNullOrEmpty(city)) return "UNK";
+
+        return city switch
+        {
+            "Москва" => "SVO",
+            "Санкт-Петербург" => "LED",
+            "Абакан" => "ABA",
+            "Домодедово" => "DME",
+            _ => city.Length >= 3 ? city.Substring(0, 3).ToUpper() : city.ToUpper()
+        };
+    }
 }
 
 <div class="main-container">
@@ -41,7 +60,7 @@
         </form>
     </div>
 
-        @if (Model.Any())
+    @if (Model.Any())
     {
         <div class="table-container" style="width: auto">
             <table>
@@ -53,6 +72,9 @@
                 <tbody>
                     @foreach (var ticket in Model)
                     {
+                        var departureCity = _db.Directions.FirstOrDefault(d => d.Direction_Id == ticket.Departure_Direction_Id)?.City;
+                        var arrivalCity = _db.Directions.FirstOrDefault(d => d.Direction_Id == ticket.Arrival_Direction_Id)?.City;
+
                         <tr>
                             <td>
                                 <a asp-action="FlightPurchase" asp-controller="Flights" asp-route-id="@ticket.Ticket_Id" class="ticket-link">
@@ -70,7 +92,7 @@
                                             </div>
                                         </div>
                                         <div class="info-row">
-                                            <div class="route">@ticket.Departure_City — @ticket.Arrival_City</div>
+                                            <div class="route">@departureCity — @arrivalCity</div>
                                         </div>
                                         <div class="details-row">
                                             <div class="calendar">
@@ -84,11 +106,11 @@
                                             <div class="time-info">
                                                 <div class="departure">
                                                     <div class="time">@ticket.Departure_Time.ToString("hh\\:mm")</div>
-                                                    <div class="airport">@GetAirportCode(ticket.Departure_City)</div>
+                                                    <div class="airport">@GetAirportCode(departureCity)</div>
                                                 </div>
                                                 <div class="arrival">
                                                     <div class="time">@ticket.Arrival_Time.ToString("hh\\:mm")</div>
-                                                    <div class="airport">@GetAirportCode(ticket.Arrival_City)</div>
+                                                    <div class="airport">@GetAirportCode(arrivalCity)</div>
                                                 </div>
                                             </div>
                                             <div class="duration">
@@ -112,8 +134,8 @@
         </div>
     }
     else if (!string.IsNullOrEmpty(Context.Request.Query["from"]) ||
-             !string.IsNullOrEmpty(Context.Request.Query["to"]) ||
-             !string.IsNullOrEmpty(Context.Request.Query["date"]))
+    !string.IsNullOrEmpty(Context.Request.Query["to"]) ||
+    !string.IsNullOrEmpty(Context.Request.Query["date"]))
     {
         <div class="outer-container" style="width: auto">
             <div class="text-center">
@@ -122,23 +144,5 @@
                 <h5 style="color: #ffffff">Попробуйте поискать рейсы из чуть более крупного города неподалёку, и подходящие билеты наверняка найдутся</h5>
             </div>
         </div>
-        @* <div class="alert alert-info">
-            По вашему запросу билетов не найдено. Попробуйте изменить параметры поиска.
-        </div> *@
     }
 </div>
-
-@* убрать *@
-@functions {
-    public string GetAirportCode(string city)
-    {
-        return city switch
-        {
-            "Москва" => "SVO",
-            "Санкт-Петербург" => "LED",
-            "Абакан" => "ABA",
-            "Домодедово" => "DME",
-            _ => city.Length >= 3 ? city.Substring(0, 3).ToUpper() : city.ToUpper()
-        };
-    }
-}

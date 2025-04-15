@@ -13,22 +13,20 @@ namespace TourFlow.Models
         public int Booking_Id { get; set; }
 
         [Required]
-        [StringLength(100)]
-        public string Departure_City { get; set; }
+        public int Departure_Direction_Id { get; set; }
 
         [Required]
-        [StringLength(100)]
-        public string Arrival_City { get; set; }
+        public int Arrival_Direction_Id { get; set; }
 
         [Required]
         [Column(TypeName = "date")]
-        public DateTime Departure_Date { get; set; }  // Заменили DateOnly на DateTime
+        public DateTime Departure_Date { get; set; }  // Замена DateOnly - DateTime
 
         [Required]
-        public TimeSpan Departure_Time { get; set; }  // Заменили TimeOnly на TimeSpan
+        public TimeSpan Departure_Time { get; set; }  // Замена TimeOnly - TimeSpan
 
         [Required]
-        public TimeSpan Arrival_Time { get; set; }    // Заменили TimeOnly на TimeSpan
+        public TimeSpan Arrival_Time { get; set; }    // Замена TimeOnly - TimeSpan
 
         [ForeignKey("FlightType")]
         public int Flight_Type_Id { get; set; }
@@ -48,7 +46,6 @@ namespace TourFlow.Models
         public FlightType FlightType { get; set; }
         public Airline Airline { get; set; }
 
-        // Добавляем вспомогательные свойства для удобства
         [NotMapped]
         public string FormattedDepartureTime => Departure_Time.ToString(@"hh\:mm");
 

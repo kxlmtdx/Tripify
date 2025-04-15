@@ -1,7 +1,28 @@
-﻿@model FlightTicket
+﻿@model TourFlow.Models.FlightTicket
 @using System.Globalization
+@using Microsoft.EntityFrameworkCore
+@using TourFlow.Data
+@inject TourFlow.Data.ApplicationDbContext _db
 @{
     ViewData["Title"] = "Покупка билета";
+
+    var departureDirection = _db.Directions.FirstOrDefault(d => d.Direction_Id == Model.Departure_Direction_Id);
+    var arrivalDirection = _db.Directions.FirstOrDefault(d => d.Direction_Id == Model.Arrival_Direction_Id);
+
+    // выкинуть нахуй при первой возможности
+    string GetAirportCode(string city)
+    {
+        if (string.IsNullOrEmpty(city)) return "UNK";
+
+        return city switch
+        {
+            "Москва" => "SVO",
+            "Санкт-Петербург" => "LED",
+            "Абакан" => "ABA",
+            "Домодедово" => "DME",
+            _ => city.Length >= 3 ? city.Substring(0, 3).ToUpper() : city.ToUpper()
+        };
+    }
 }
 
 <div class="main-container">
@@ -27,7 +48,7 @@
         </div>
 
         <div class="route-info">
-            <div class="cities">@Model.Departure_City → @Model.Arrival_City</div>
+            <div class="cities">@departureDirection?.City → @arrivalDirection?.City</div>
             <div class="date">
                 @{
                     var russianCulture = new CultureInfo("ru-RU");
@@ -40,7 +61,7 @@
         <div class="flight-details">
             <div class="departure">
                 <div class="time">@Model.Departure_Time.ToString("hh\\:mm")</div>
-                <div class="airport">@GetAirportCode(Model.Departure_City)</div>
+                <div class="airport">@GetAirportCode(departureDirection?.City)</div>
             </div>
             <div class="duration">
                 @{
@@ -50,7 +71,7 @@
             </div>
             <div class="arrival">
                 <div class="time">@Model.Arrival_Time.ToString("hh\\:mm")</div>
-                <div class="airport">@GetAirportCode(Model.Arrival_City)</div>
+                <div class="airport">@GetAirportCode(arrivalDirection?.City)</div>
             </div>
         </div>
 
@@ -127,19 +148,13 @@
             <button type="submit" class="search-button purchase-button">Купить билет</button>
         </form>
     </div>
-</div>
 
-@* убрать *@
-@functions {
-    public string GetAirportCode(string city)
-    {
-        return city switch
-        {
-            "Москва" => "SVO",
-            "Санкт-Петербург" => "LED",
-            "Абакан" => "ABA",
-            "Домодедово" => "DME",
-            _ => city.Length >= 3 ? city.Substring(0, 3).ToUpper() : city.ToUpper()
-        };
-    }
-}
+    <label class="toggle-switch" style="margin-top:10px">
+        <input type="checkbox" class="toggle-input">
+        <span class="toggle-switch-control"></span>
+        <span class="toggle-label" style="color:#ffffff">Включить отель в заказ?</span>
+    </label>
+
+    <div class="ticket-details">
+    </div>
+</div>

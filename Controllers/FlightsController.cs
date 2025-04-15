@@ -41,12 +41,24 @@ namespace TourFlow.Controllers
 
             if (!string.IsNullOrEmpty(from))
             {
-                query = query.Where(ft => ft.Departure_City.Contains(from));
+                var departureDirection = await _db.Directions
+                    .FirstOrDefaultAsync(d => d.City == from);
+
+                if (departureDirection != null)
+                {
+                    query = query.Where(ft => ft.Departure_Direction_Id == departureDirection.Direction_Id);
+                }
             }
 
             if (!string.IsNullOrEmpty(to))
             {
-                query = query.Where(ft => ft.Arrival_City.Contains(to));
+                var arrivalDirection = await _db.Directions
+                    .FirstOrDefaultAsync(d => d.City == to);
+
+                if (arrivalDirection != null)
+                {
+                    query = query.Where(ft => ft.Arrival_Direction_Id == arrivalDirection.Direction_Id);
+                }
             }
 
             if (!string.IsNullOrEmpty(date) && DateTime.TryParse(date, out DateTime departureDate))
@@ -72,6 +84,14 @@ namespace TourFlow.Controllers
             {
                 return NotFound();
             }
+
+            var departureCity = await _db.Directions
+                .FirstOrDefaultAsync(d => d.Direction_Id == ticket.Departure_Direction_Id);
+            var arrivalCity = await _db.Directions
+                .FirstOrDefaultAsync(d => d.Direction_Id == ticket.Arrival_Direction_Id);
+
+            ViewBag.DepartureCity = departureCity?.City;
+            ViewBag.ArrivalCity = arrivalCity?.City;
 
             if (User.Identity.IsAuthenticated)
             {
@@ -104,7 +124,8 @@ namespace TourFlow.Controllers
                 if (ticket == null)
                     return NotFound();
 
-                if (await _db.Tours.AllAsync(t => t.Tour_Id != 1))
+                var tour = await _db.Tours.FirstOrDefaultAsync();
+                if (tour == null)
                 {
                     TempData["ErrorMessage"] = "Необходимо указать действительный тур";
                     return RedirectToAction("Index", "Home");
@@ -116,7 +137,7 @@ namespace TourFlow.Controllers
                     Airline_Id = ticket.Airline_Id,
                     Booking_Date = DateTime.Now,
                     Booking_Status_Id = 1,
-                    Tour_Id = 1,
+                    Tour_Id = tour.Tour_Id,
                     Account = user
                 };
 
@@ -127,28 +148,33 @@ namespace TourFlow.Controllers
                     await _db.SaveChangesAsync();
 
                     ticket.Booking_Id = booking.Booking_Id;
+                    _db.Flight_Tickets.Update(ticket);
                     await _db.SaveChangesAsync();
 
                     await transaction.CommitAsync();
-                    //TempData["SuccessMessage"] = $"Билет успешно приобретен! Номер: {booking.Booking_Id}";
+                    TempData["SuccessMessage"] = $"Билет успешно приобретен! Номер брони: {booking.Booking_Id}";
                 }
                 catch (DbUpdateException ex)
                 {
                     await transaction.RollbackAsync();
                     TempData["ErrorMessage"] = $"Ошибка базы данных: {ex.InnerException?.Message ?? ex.Message}";
+                    return RedirectToAction("FlightPurchase", new { id });
                 }
                 catch (Exception ex)
                 {
                     await transaction.RollbackAsync();
                     TempData["ErrorMessage"] = $"Ошибка: {ex.Message}";
+                    return RedirectToAction("FlightPurchase", new { id });
                 }
             }
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = $"Ошибка: {ex.Message}";
+                return RedirectToAction("FlightPurchase", new { id });
             }
 
             return RedirectToAction("Index", "Home");
         }
+
     }
 }

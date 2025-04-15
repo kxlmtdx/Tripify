@@ -21,7 +21,7 @@ body {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-.form-control {
+/*.form-control {
     background-color: #3a3a3a !important;
     border: 1px solid #4a4a4a !important;
     color: #ffffff !important;
@@ -48,7 +48,7 @@ body {
     .form-control[readonly] {
         background-color: #3a3a3a !important;
         color: #ffffff !important;
-    }
+    }*/
 
 .view-card {
     display: flex;
@@ -610,7 +610,7 @@ body {
     background-color: #1d1e20;
     border-radius: 8px;
     padding: 20px;
-    max-width: 700px;
+    max-width: auto;
     margin: 0 auto;
     color: #ffffff;
 }
@@ -682,4 +682,243 @@ body {
 
 .form-group label {
     color: #ffffff;
+}
+
+a {
+    text-decoration: none; /* Убирает подчеркивание */
+    color: inherit; /* Наследует цвет текста от родителя */
+}
+
+/* Контейнер */
+.toggle-switch {
+    display: inline-flex;
+    align-items: center;
+    cursor: pointer;
+    font-family: sans-serif;
+}
+
+/* Скрываем оригинальный чекбокс */
+.toggle-input {
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+/* Визуальная часть переключателя */
+.toggle-switch-control {
+    position: relative;
+    width: 36px;
+    height: 18px;
+    border-radius: 9px;
+    background: #f0f0f0;
+    transition: all 0.3s ease;
+}
+
+    /* Круглый индикатор */
+    .toggle-switch-control::before {
+        content: '';
+        position: absolute;
+        left: 2px;
+        top: 2px;
+        width: 14px;
+        height: 14px;
+        background: #999;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+
+/* Состояние "включено" */
+.toggle-input:checked + .toggle-switch-control::before {
+    left: calc(100% - 16px);
+    background: #555;
+}
+
+/* Текст */
+.toggle-label {
+    margin-left: 8px;
+    font-size: 14px;
+    color: #333;
+}
+
+/* Состояния hover */
+.toggle-input:not(:disabled) ~ .toggle-label:hover ~ .toggle-switch-control,
+.toggle-input:not(:disabled):hover ~ .toggle-switch-control {
+    background: #e0e0e0;
+}
+
+.documents-container {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    justify-content: space-between;
+    width: 1000px;
+}
+
+.document-card {
+    border: 1px solid #1d1e20;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background: #1d1e20;
+    flex: 1;
+    min-width: 0; /* Для правильного сжатия flex-элементов */
+}
+
+.document-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #2e3035;
+}
+
+.document-title {
+    margin: 0;
+    color: #ffffff;
+    font-size: 1.3em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.document-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-btn, .delete-btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background 0.2s;
+    white-space: nowrap;
+}
+
+.edit-btn {
+    background-color: #8888d5;
+    color: white;
+}
+
+    .edit-btn:hover {
+        background-color: #7979cd;
+    }
+
+.delete-btn {
+    background-color: #e74c3c;
+    color: white;
+}
+
+    .delete-btn:hover {
+        background-color: #c0392b;
+    }
+
+.document-content {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.document-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+    .document-field label {
+        font-weight: bold;
+        min-width: 100px;
+        color: #ffffff;
+    }
+
+    .document-field .field-value {
+        flex-grow: 1;
+        padding: 5px 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .document-field .field-edit {
+        flex-grow: 1;
+        padding: 5px 8px;
+        border: 1px solid #2e3035;
+        border-radius: 4px;
+        width: 100%;
+    }
+
+.document-meta {
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px solid #2e3035;
+    font-size: 0.9em;
+    color: #7f8c8d;
+}
+
+/* Адаптация для мобильных устройств */
+@media (max-width: 768px) {
+    .documents-container {
+        flex-direction: column;
+        width: 100%;
+        max-width: 100%;
+        padding: 0 15px;
+        box-sizing: border-box;
+    }
+
+    .document-card {
+        width: 100%;
+        min-width: auto;
+        margin: 0 0 20px 0;
+        box-sizing: border-box;
+    }
+
+    .document-header {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .document-actions {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .edit-btn,
+    .delete-btn {
+        flex: 1;
+        text-align: center;
+    }
+
+    .document-field {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+        width: 100%;
+    }
+
+        .document-field label {
+            min-width: auto;
+            font-size: 0.9em;
+        }
+
+        .document-field .field-value {
+            width: 100%;
+            word-break: break-word;
+        }
+}
+
+.warning-card {
+    background: #1d1e20;
+    margin-bottom: 10px;
+}
+
+.warning-card .document-content {
+    text-align: center;
+}
+
+.warning-card .edit-btn {
+    display: inline-block;
+    text-decoration: none;
+    font-size: 1.1em;
 }

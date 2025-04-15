@@ -17,7 +17,7 @@ namespace TourFlow.Data
         public DbSet<Booking> Booking { get; set; }
         public DbSet<BookingStatusType> BookingStatusTypes { get; set; }
         public DbSet<User_Document> User_Documents { get; set; }
-        public DbSet<DocumentType> DocumentsType { get; set; }
+        public DbSet<DocumentType> Documents_Type { get; set; }
         public DbSet<FlightTicket> Flight_Tickets { get; set; }
         public DbSet<FlightType> Flight_Types { get; set; }
 
@@ -99,6 +99,11 @@ namespace TourFlow.Data
                 .HasOne(ft => ft.Airline)
                 .WithMany(a => a.FlightTickets)
                 .HasForeignKey(ft => ft.Airline_Id);
+
+            modelBuilder.Entity<DocumentType>().HasData(
+                new DocumentType { Document_Type_Id = 1, Document_Type = "Паспорт РФ" },
+                new DocumentType { Document_Type_Id = 4, Document_Type = "Загранпаспорт" }
+            );
         }
     }
 }

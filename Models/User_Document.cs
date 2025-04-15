@@ -12,7 +12,7 @@ namespace TourFlow.Models
         [ForeignKey("Account")]
         public int Account_Id { get; set; }
 
-        [ForeignKey("Document_Type")]
+        [ForeignKey("DocumentType")]
         public int Document_Type_Id { get; set; }
 
         [Required]
@@ -31,16 +31,16 @@ namespace TourFlow.Models
         public int Document_Number { get; set; }
 
         [StringLength(50)]
-        public string International_Last_Name { get; set; }
+        public string? International_Last_Name { get; set; }
 
         [StringLength(50)]
-        public string International_First_Name { get; set; }
+        public string? International_First_Name { get; set; }
 
         public int? International_Document_Number { get; set; }
 
         public DateTime? Expiration_Date { get; set; }
 
         public Account Account { get; set; }
-        public User_Document Document_Type { get; set; }
+        public DocumentType Document_Type { get; set; }
     }
 }

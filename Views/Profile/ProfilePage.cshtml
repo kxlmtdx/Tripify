@@ -37,7 +37,7 @@
                     </a>
                 </div>
             </div>
-            <div class="view-card" style="background: #1f1f1f; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+            <div class="view-card" style="background: #1f1f1f; padding: 5px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                 <div style="display: flex; flex-direction: column; gap: 10px;">
                     <div class="info">
                         <h4 style="color: #ffffff; margin-bottom: 15px; font-size: 18px;">Документы</h4>
@@ -46,15 +46,15 @@
                                 <span>Паспорт</span>
                                 <img src="@(ViewBag.Documents.HasPassport ? "https://i.imgur.com/WmMh5TR.png" : "https://i.imgur.com/nHonEj4.png")"
                                      alt="Паспорт"
-                                     style="width: 20px; height: 20px; object-fit: contain; filter: brightness(0) invert(1);">
+                                     style="width: 5px; height: 20px; object-fit: contain; filter: brightness(0) invert(1);">
                             </a>
                             <a class="document-item" style="display: flex; align-items: center; color: #ffffff; text-decoration: none; gap: 8px;">
                                 <span>Загранпаспорт</span>
                                 <img src="@(ViewBag.Documents.HasInternationalPassport ? "https://i.imgur.com/8L8874e.png" : "https://i.imgur.com/nHonEj4.png")"
                                      alt="Загранпаспорт"
-                                     style="width: 20px; height: 20px; object-fit: contain; filter: brightness(0) invert(1);">
+                                     style="width: 5px; height: 20px; object-fit: contain; filter: brightness(0) invert(1);">
                             </a>
-                            <a asp-controller="Profile" asp-action="AddDocuments" type="button" class="more-button" style="margin-top: 12px; text-decoration: none; color: #000; text-align: center">
+                            <a asp-controller="Profile" asp-action="ProfileDocuments" type="button" class="more-button" style="margin-top: 12px; text-decoration: none; color: #000; text-align: center">
                                 Добавить или изменить
                             </a>
                         </div>

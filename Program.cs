@@ -63,6 +63,11 @@ namespace TourFlow
             app.UseCookiePolicy();
 
             app.MapControllerRoute(
+                name: "AddDocuments",
+                pattern: "Profile/AddDocuments",
+                defaults: new { controller = "Profile", action = "AddDocuments" });
+
+            app.MapControllerRoute(
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 

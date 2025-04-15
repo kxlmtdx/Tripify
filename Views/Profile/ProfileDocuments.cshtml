@@ -1,0 +1,98 @@
+﻿@model List<TourFlow.Models.User_Document>
+@{
+    ViewData["Title"] = "Мои документы";
+    var documentTypes = ViewBag.DocumentTypes as List<TourFlow.Models.DocumentType>;
+
+    var hasPassport = Model.Any(d => d.Document_Type_Id == 1);
+    var hasInternationalPassport = Model.Any(d => d.Document_Type_Id == 4);
+    var showWarning = !hasPassport || !hasInternationalPassport;
+}
+
+<div class="main-container">
+    <h2 style="color: #fff;">Документы</h2>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">@TempData["SuccessMessage"]</div>
+    }
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger">@TempData["ErrorMessage"]</div>
+    }
+
+    @if (showWarning)
+    {
+        <div class="outer-container warning-card">
+            <div class="document-content">
+                <h4 style="color: #fff;">Хотите добавить документы?</h4>
+                <p style="color: #ccc;">
+                    @if (!hasPassport && !hasInternationalPassport)
+                    {
+                        <span>У вас пока не добавлены основные документы</span>
+                    }
+                    else if (!hasPassport)
+                    {
+                        <span>Отсутствует паспорт гражданина РФ</span>
+                    }
+                    else
+                    {
+                        <span>Отсутствует загранпаспорт</span>
+                    }
+                </p>
+                <a asp-action="AddDocuments" class="edit-btn">
+                    Добавить документ
+                </a>
+            </div>
+        </div>
+    }
+
+    <div class="documents-container">
+        @foreach (var document in Model)
+        {
+            var docType = documentTypes.FirstOrDefault(dt => dt.Document_Type_Id == document.Document_Type_Id);
+            <div class="document-card">
+                <div class="document-header">
+                    <h3 class="document-title">@docType?.Document_Type</h3>
+                    <div class="document-actions">
+                        <a asp-action="EditDocument" asp-route-id="@document.Document_Id" class="edit-btn">Редактировать</a>
+                        <form asp-action="DeleteDocument" method="post" class="d-inline">
+                            <input type="hidden" name="id" value="@document.Document_Id">
+                            <button type="submit" class="delete-btn" onclick="return confirm('Удалить этот документ?')">
+                                Удалить
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="document-content">
+                    <div class="document-field">
+                        <label>ФИО:</label>
+                        <span class="field-value" style="color: #ffffff">@document.Last_Name @document.First_Name @document.Middle_Name</span>
+                    </div>
+                    <div class="document-field">
+                        <label>Дата рождения:</label>
+                        <span class="field-value" style="color: #ffffff">@document.Date_Of_Birth.ToString("dd.MM.yyyy")</span>
+                    </div>
+                    <div class="document-field">
+                        <label>Номер документа:</label>
+                        <span class="field-value" style="color: #ffffff">@document.Document_Number</span>
+                    </div>
+
+                    @if (document.International_Document_Number != null)
+                    {
+                        <div class="document-meta">
+                            <div class="document-field">
+                                <label style="color: #ffffff">Международный документ:</label>
+                                <span class="field-value" style="color: #ffffff">
+                                    @document.International_Last_Name @document.International_First_Name<br>
+                                    Номер: @document.International_Document_Number<br>
+                                    Срок: @(document.Expiration_Date?.ToString("dd.MM.yyyy") ?? "не указан")
+                                </span>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+</div>
