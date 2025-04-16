@@ -1,0 +1,118 @@
+﻿@model TourFlow.Models.Tour
+@using System.Globalization
+
+@{
+    ViewData["Title"] = "Покупка тура";
+}
+
+<div class="main-container">
+    <div class="text-center">
+        <h2 style="font-weight: bold; margin: 32px; color:#efefef;">@ViewData["Title"]</h2>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success">
+            @TempData["SuccessMessage"]
+        </div>
+    }
+
+    <div class="tour-details">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="https://via.placeholder.com/600x400" class="img-fluid rounded mb-3" alt="@Model.Name">
+            </div>
+            <div class="col-md-6">
+                <h3>@Model.Name</h3>
+                <div class="tour-info">
+                    <div class="tour-location mb-2">
+                        <i class="fas fa-map-marker-alt"></i> @Model.Direction.City, @Model.Direction.Country
+                    </div>
+                    <div class="tour-hotel mb-2">
+                        <i class="fas fa-hotel"></i> @Model.Hotel.Name (@Model.Hotel.Stars ★)
+                    </div>
+                    <div class="tour-price mb-3">
+                        <h4>@Model.Price.ToString("N0") ₽</h4>
+                    </div>
+                    <div class="tour-description mb-4">
+                        <p>@Model.TourType.Type</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <form asp-action="ConfirmTourPurchase" method="post" class="mt-4">
+            <input type="hidden" name="id" value="@Model.Tour_Id" />
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="passengerName">ФИО пассажира</label>
+                        @if (User.Identity.IsAuthenticated && ViewBag.Passport != null)
+                        {
+                            var passport = ViewBag.Passport as User_Document;
+                            <input type="text" id="passengerName" name="passengerName"
+                                   class="form-control"
+                                   value="@($"{passport.Last_Name} {passport.First_Name}")"
+                                   required />
+                        }
+                        else
+                        {
+                            <input type="text" id="passengerName" name="passengerName"
+                                   class="form-control" required />
+                        }
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group mb-3">
+                        <label for="passportNumber">Номер паспорта</label>
+                        @if (User.Identity.IsAuthenticated && ViewBag.Passport != null)
+                        {
+                            var passport = ViewBag.Passport as User_Document;
+                            <input type="text" id="passportNumber" name="passportNumber"
+                                   class="form-control"
+                                   value="@passport.Document_Number"
+                                   required />
+                        }
+                        else
+                        {
+                            <input type="text" id="passportNumber" name="passportNumber"
+                                   class="form-control" required />
+                        }
+                    </div>
+                </div>
+            </div>
+
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="text-center mb-3">
+                    @if (ViewBag.Passport != null)
+                    {
+                        <span style="color: gray; font-size: 12px">
+                            Используются данные из привязанного паспорта.
+                            <a asp-controller="Profile" asp-action="Documents">Изменить</a>
+                        </span>
+                    }
+                    else
+                    {
+                        <span style="color: gray; font-size: 12px">
+                            <a asp-controller="Profile" asp-action="Documents">Привязать документы</a>
+                            для автоматического заполнения
+                        </span>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center mb-3">
+                    <span style="color: gray; font-size: 12px">
+                        <a asp-controller="Auth" asp-action="SignIn">Войдите</a>,
+                        чтобы использовать привязанные документы
+                    </span>
+                </div>
+            }
+
+            <button type="submit" class="btn btn-primary btn-lg w-100">Купить тур</button>
+        </form>
+    </div>
+</div>

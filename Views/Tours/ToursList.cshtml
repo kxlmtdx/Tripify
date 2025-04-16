@@ -1,5 +1,89 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model IEnumerable<TourFlow.Models.Tour>
+@using TourFlow.Data
+@inject ApplicationDbContext _db
+
 @{
+    ViewData["Title"] = "Список туров";
 }
+
+<div class="main-container">
+    <h2 class="text-center mb-4">@ViewData["Title"]</h2>
+
+    <div class="search-filters mb-4">
+        <form method="get" class="row g-3">
+            <div class="col-md-3">
+                <label class="form-label">Страна</label>
+                <select name="country" class="form-select">
+                    <option value="">Все страны</option>
+                    @foreach (var country in ViewBag.Countries)
+                    {
+                        <option value="@country" selected="@(ViewBag.SelectedCountry == country)">@country</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-3">
+                <label class="form-label">Город</label>
+                <select name="city" class="form-select">
+                    <option value="">Все города</option>
+                    @foreach (var city in ViewBag.Cities)
+                    {
+                        <option value="@city" selected="@(ViewBag.SelectedCity == city)">@city</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Звезды</label>
+                <select name="stars" class="form-select">
+                    <option value="">Любые</option>
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        <option value="@i" selected="@(ViewBag.Stars == i)">@i ★</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Цена от</label>
+                <input type="number" name="minPrice" class="form-control" value="@ViewBag.MinPrice" placeholder="мин">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label">Цена до</label>
+                <input type="number" name="maxPrice" class="form-control" value="@ViewBag.MaxPrice" placeholder="макс">
+            </div>
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">Найти</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="tours-list">
+        @foreach (var tour in Model)
+        {
+            <div class="tour-card mb-4">
+                <div class="row g-0">
+                    <div class="col-md-4">
+                        <img src="https://via.placeholder.com/300x200" class="img-fluid rounded-start" alt="@tour.Name">
+                    </div>
+                    <div class="col-md-8">
+                        <div class="card-body">
+                            <h5 class="card-title">@tour.Name</h5>
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    @tour.Direction.City, @tour.Direction.Country •
+                                    @tour.Hotel.Stars ★ •
+                                    @tour.Price.ToString("N0") ₽
+                                </small>
+                            </p>
+                            <p class="card-text">@tour.TourType.Type</p>
+                            <a href="@Url.Action("ToursPurchase", new { id = tour.Tour_Id })" class="btn btn-primary">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+
+        @if (!Model.Any())
+        {
+            <div class="alert alert-info">По вашему запросу туры не найдены</div>
+        }
+    </div>
+</div>

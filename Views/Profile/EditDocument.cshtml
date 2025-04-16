@@ -4,81 +4,79 @@
     var documentTypes = ViewBag.DocumentTypes as List<TourFlow.Models.DocumentType>;
 }
 
-<div class="main-container">
-    <div class="container">
-        <h2>Редактирование документа</h2>
+<div class="container">
+    <h2>Редактирование документа</h2>
 
-        <form asp-action="EditDocument" method="post">
-            <input type="hidden" asp-for="Document_Id" />
-            <input type="hidden" asp-for="Account_Id" />
+    <form asp-action="EditDocument" method="post">
+        <input type="hidden" asp-for="Document_Id" />
+        <input type="hidden" asp-for="Account_Id" />
 
-            <div class="row">
-                <div class="outer-container">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Тип документа</label>
-                            <select asp-for="Document_Type_Id" class="form-control" required>
-                                @foreach (var type in documentTypes)
-                                {
-                                    <option value="@type.Document_Type_Id">@type.Document_Type</option>
-                                }
-                            </select>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Фамилия</label>
-                            <input asp-for="Last_Name" class="form-control" required />
-                        </div>
-
-                        <div class="form-group">
-                            <label>Имя</label>
-                            <input asp-for="First_Name" class="form-control" required />
-                        </div>
-
-                        <div class="form-group">
-                            <label>Отчество</label>
-                            <input asp-for="Middle_Name" class="form-control" />
-                        </div>
-
-                        <div class="form-group">
-                            <label>Дата рождения</label>
-                            <input type="date" asp-for="Date_Of_Birth" class="form-control" required />
-                        </div>
+        <div class="row">
+            <div class="outer-container">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Тип документа</label>
+                        <select asp-for="Document_Type_Id" class="form-control" required>
+                            @foreach (var type in documentTypes)
+                            {
+                                <option value="@type.Document_Type_Id">@type.Document_Type</option>
+                            }
+                        </select>
                     </div>
-                </div>
 
-                <div class="outer-container">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Номер документа</label>
-                            <input asp-for="Document_Number" class="form-control" required />
-                        </div>
+                    <div class="form-group">
+                        <label>Фамилия</label>
+                        <input asp-for="Last_Name" class="form-control" required />
+                    </div>
 
-                        <div class="form-group">
-                            <label>Международная фамилия</label>
-                            <input asp-for="International_Last_Name" class="form-control" />
-                        </div>
+                    <div class="form-group">
+                        <label>Имя</label>
+                        <input asp-for="First_Name" class="form-control" required />
+                    </div>
 
-                        <div class="form-group">
-                            <label>Международное имя</label>
-                            <input asp-for="International_First_Name" class="form-control" />
-                        </div>
+                    <div class="form-group">
+                        <label>Отчество</label>
+                        <input asp-for="Middle_Name" class="form-control" />
+                    </div>
 
-                        <div class="form-group">
-                            <label>Номер международного документа</label>
-                            <input asp-for="International_Document_Number" class="form-control" />
-                        </div>
-
-                        <div class="form-group">
-                            <label>Срок действия</label>
-                            <input type="date" asp-for="Expiration_Date" class="form-control" />
-                        </div>
+                    <div class="form-group">
+                        <label>Дата рождения</label>
+                        <input type="date" asp-for="Date_Of_Birth" class="form-control" required />
                     </div>
                 </div>
             </div>
 
-            <button type="submit" class="btn btn-primary">Сохранить</button>
-            <a asp-action="ProfileDocuments" class="btn btn-secondary">Отмена</a>
-        </form>
-    </div>
+            <div class="outer-container">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Номер документа</label>
+                        <input asp-for="Document_Number" class="form-control" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Международная фамилия</label>
+                        <input asp-for="International_Last_Name" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Международное имя</label>
+                        <input asp-for="International_First_Name" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Номер международного документа</label>
+                        <input asp-for="International_Document_Number" class="form-control" />
+                    </div>
+
+                    <div class="form-group">
+                        <label>Срок действия</label>
+                        <input type="date" asp-for="Expiration_Date" class="form-control" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a asp-action="ProfileDocuments" class="btn btn-secondary">Отмена</a>
+    </form>
 </div>

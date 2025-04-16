@@ -54,7 +54,10 @@
                 <div class="info">
                     <h4>🔥 Горячие туры</h4>
                     <h6 style="margin-left: 3px">Успей оформить пока не разобрали!</h6>
-                    <button class="more-button" style="margin-top: 8px; background: ">Узнать больше</button>
+                    @* <button class="more-button" style="margin-top: 8px; background: ">Узнать больше</button> *@
+                    <a asp-controller="Tours" asp-action="ToursList" type="button" class="more-button" style="margin-top: 8px; width: 135px">
+                        Узнать больше
+                    </a>
                 </div>
             </div>
 
@@ -78,7 +81,6 @@
         </div>
     </div>
 
-    <!-- поеботу эту всю в жс потом -->
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
 </body>

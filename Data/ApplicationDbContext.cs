@@ -12,7 +12,8 @@ namespace TourFlow.Data
         public DbSet<Hotel> Hotels { get; set; }
         public DbSet<Direction> Directions { get; set; }
         public DbSet<Tour> Tours { get; set; }
-        public DbSet<TourType> ToursType { get; set; }
+        public DbSet<TourType> ToursTypes { get; set; }
+
         public DbSet<Airline> Airlines { get; set; }
         public DbSet<Booking> Booking { get; set; }
         public DbSet<BookingStatusType> BookingStatusTypes { get; set; }
@@ -104,6 +105,12 @@ namespace TourFlow.Data
                 new DocumentType { Document_Type_Id = 1, Document_Type = "Паспорт РФ" },
                 new DocumentType { Document_Type_Id = 4, Document_Type = "Загранпаспорт" }
             );
+
+            modelBuilder.Entity<Booking>()
+                .HasOne(b => b.Hotel)
+                .WithMany()
+                .HasForeignKey(b => b.Hotel_Id)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

@@ -53,7 +53,7 @@ body {
 .view-card {
     display: flex;
     align-items: center;
-    background-color: #1f1f1f;
+    background-color: #1d1e20;
     background-image: url('path/to/your/image.png');
     background-size: cover;
     background-position: center;
@@ -921,4 +921,70 @@ a {
     display: inline-block;
     text-decoration: none;
     font-size: 1.1em;
+}
+
+.hotel-details {
+    margin-top: 10px;
+}
+
+.hotel-rating {
+    color: #FFD700;
+    margin-bottom: 5px;
+}
+
+.hotel-location, .hotel-nutrition {
+    color: #aaa;
+    font-size: 14px;
+    margin-bottom: 3px;
+}
+
+#selectHotelBtn {
+    background-color: #8888d5;
+    color: white;
+    border-color: #7979cd;
+}
+
+    #selectHotelBtn:hover {
+        background-color: #3e8e41;
+        border-color: #3e8e41;
+    }
+
+#changeHotelBtn {
+    font-size: 12px;
+}
+
+.tour-card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s;
+}
+
+    .tour-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+.search-filters {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.tour-details {
+    background: #2a2a2a;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.tour-info {
+    color: #ffffff;
+}
+
+.tour-location, .tour-hotel {
+    color: #aaa;
+}
+
+.tour-price {
+    color: #4CAF50;
 }

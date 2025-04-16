@@ -8,26 +8,11 @@
 
     var departureDirection = _db.Directions.FirstOrDefault(d => d.Direction_Id == Model.Departure_Direction_Id);
     var arrivalDirection = _db.Directions.FirstOrDefault(d => d.Direction_Id == Model.Arrival_Direction_Id);
-
-    // выкинуть нахуй при первой возможности
-    string GetAirportCode(string city)
-    {
-        if (string.IsNullOrEmpty(city)) return "UNK";
-
-        return city switch
-        {
-            "Москва" => "SVO",
-            "Санкт-Петербург" => "LED",
-            "Абакан" => "ABA",
-            "Домодедово" => "DME",
-            _ => city.Length >= 3 ? city.Substring(0, 3).ToUpper() : city.ToUpper()
-        };
-    }
 }
 
 <div class="main-container">
     <div class="text-center">
-        <h2 style="font-weight: bold; margin: 32px; color:#efefef;">Покупка билета.</h2>
+        <h2 style="font-weight: bold; margin: 32px; color:#efefef;">Покупка билета</h2>
     </div>
 
     @if (TempData["SuccessMessage"] != null)
@@ -50,35 +35,30 @@
         <div class="route-info">
             <div class="cities">@departureDirection?.City → @arrivalDirection?.City</div>
             <div class="date">
-                @{
-                    var russianCulture = new CultureInfo("ru-RU");
-                    var monthName = russianCulture.DateTimeFormat.GetMonthName(Model.Departure_Date.Month);
-                }
-                @Model.Departure_Date.Day @monthName.ToLower()
+                @Model.Day @Model.MonthName
             </div>
         </div>
 
         <div class="flight-details">
             <div class="departure">
-                <div class="time">@Model.Departure_Time.ToString("hh\\:mm")</div>
-                <div class="airport">@GetAirportCode(departureDirection?.City)</div>
+                <div class="time">@Model.FormattedDepartureTime</div>
+                <div class="airport">@ViewBag.DepartureAirportCode</div>
             </div>
             <div class="duration">
-                @{
-                    var duration = Model.Arrival_Time - Model.Departure_Time;
-                }
-                @duration.Hours ч @duration.Minutes мин
+                @Model.Duration.Hours ч @Model.Duration.Minutes мин
             </div>
             <div class="arrival">
-                <div class="time">@Model.Arrival_Time.ToString("hh\\:mm")</div>
-                <div class="airport">@GetAirportCode(arrivalDirection?.City)</div>
+                <div class="time">@Model.FormattedArrivalTime</div>
+                <div class="airport">@ViewBag.ArrivalAirportCode</div>
             </div>
         </div>
 
         <div class="flight-type">@Model.FlightType.Type_Name</div>
 
-        <form asp-action="ConfirmPurchase" method="post">
+        <form asp-action="ConfirmPurchase" method="post" id="bookingForm">
             <input type="hidden" name="id" value="@Model.Ticket_Id" />
+            <input type="hidden" name="includeHotel" id="includeHotel" value="false" />
+            <input type="hidden" name="selectedHotelId" id="selectedHotelId" />
 
             <div class="search-form" style="padding: 0px; display: flex; gap: 16px;">
                 <div class="form-group" style="flex: 1;">
@@ -145,16 +125,73 @@
                 </div>
             }
 
-            <button type="submit" class="search-button purchase-button">Купить билет</button>
+            <div class="hotel-section" style="margin-top: 30px;">
+                <label class="toggle-switch">
+                    <input type="checkbox" id="hotelToggle" class="toggle-input">
+                    <span class="toggle-switch-control"></span>
+                    <span class="toggle-label" style="color:#ffffff">Включить отель в заказ?</span>
+                </label>
+
+                <div id="hotelSelection" style="display: none; margin-top: 20px;">
+                    @if (ViewBag.AvailableHotels != null && ((List<Hotel>)ViewBag.AvailableHotels).Count > 0)
+                    {
+                        <div class="input-group mb-3">
+                            <select class="form-select" id="hotelSelect">
+                                <option value="" selected>Выберите отель...</option>
+                                @foreach (var hotel in ViewBag.AvailableHotels)
+                                {
+                                    <option value="@hotel.Hotel_Id"
+                                            data-name="@hotel.Name"
+                                            data-stars="@hotel.Stars"
+                                            data-city="@hotel.Direction?.City"
+                                            data-country="@hotel.Direction?.Country"
+                                            data-nutrition="@GetNutritionDisplay(hotel.Nutrition)">
+                                        @hotel.Name (@hotel.Stars ★)
+                                    </option>
+                                }
+                            </select>
+                            <button class="btn btn-outline-secondary" type="button" id="selectHotelBtn">Выбрать</button>
+                        </div>
+
+                        <div id="selectedHotelInfo" style="display: none; background: #2e3035; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                            <h4 id="hotelName"></h4>
+                            <div class="hotel-details">
+                                <div class="hotel-rating" id="hotelRating"></div>
+                                <div class="hotel-location" id="hotelLocation"></div>
+                                <div class="hotel-nutrition" id="hotelNutrition"></div>
+                            </div>
+                            <button type="button" class="btn btn-sm btn-outline-danger mt-2" id="changeHotelBtn">Изменить отель</button>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="alert alert-warning mt-3">Нет доступных отелей в этом городе</div>
+                    }
+                </div>
+            </div>
+
+            <button type="submit" class="search-button purchase-button" style="margin-top: 30px;">Оформить заказ</button>
         </form>
     </div>
-
-    <label class="toggle-switch" style="margin-top:10px">
-        <input type="checkbox" class="toggle-input">
-        <span class="toggle-switch-control"></span>
-        <span class="toggle-label" style="color:#ffffff">Включить отель в заказ?</span>
-    </label>
-
-    <div class="ticket-details">
-    </div>
 </div>
+
+
+@functions {
+    string GetNutritionDisplay(string nutritionCode)
+    {
+        return nutritionCode switch
+        {
+            "RO" => "Без питания",
+            "BB" => "Завтрак",
+            "HB" => "Полупансион",
+            "FB" => "Полный пансион",
+            "AI" => "Всё включено",
+            "UAI" => "Ультра всё включено",
+            _ => "Не указано"
+        };
+    }
+}
+
+@section Scripts {
+    <script src="~/js/hotelDisplay.js" asp-append-version="true"></script>
+}

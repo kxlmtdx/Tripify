@@ -85,13 +85,21 @@ namespace TourFlow.Controllers
                 return NotFound();
             }
 
-            var departureCity = await _db.Directions
+            var departureDirection = await _db.Directions
                 .FirstOrDefaultAsync(d => d.Direction_Id == ticket.Departure_Direction_Id);
-            var arrivalCity = await _db.Directions
+            var arrivalDirection = await _db.Directions
                 .FirstOrDefaultAsync(d => d.Direction_Id == ticket.Arrival_Direction_Id);
 
-            ViewBag.DepartureCity = departureCity?.City;
-            ViewBag.ArrivalCity = arrivalCity?.City;
+            var availableHotels = await _db.Hotels
+                .Include(h => h.Direction)
+                .Where(h => h.Direction.City == arrivalDirection.City)
+                .ToListAsync();
+
+            ViewBag.DepartureCity = departureDirection?.City;
+            ViewBag.ArrivalCity = arrivalDirection?.City;
+            ViewBag.DepartureAirportCode = GetAirportCode(departureDirection?.City);
+            ViewBag.ArrivalAirportCode = GetAirportCode(arrivalDirection?.City);
+            ViewBag.AvailableHotels = availableHotels;
 
             if (User.Identity.IsAuthenticated)
             {
@@ -110,7 +118,8 @@ namespace TourFlow.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ConfirmPurchase(int id, string passengerName, string passportNumber)
+        public async Task<IActionResult> ConfirmPurchase(int id, string passengerName, string passportNumber,
+            bool includeHotel = false, int? selectedHotelId = null)
         {
             try
             {
@@ -124,11 +133,23 @@ namespace TourFlow.Controllers
                 if (ticket == null)
                     return NotFound();
 
-                var tour = await _db.Tours.FirstOrDefaultAsync();
-                if (tour == null)
+                Hotel hotel = null;
+                if (includeHotel)
                 {
-                    TempData["ErrorMessage"] = "Необходимо указать действительный тур";
-                    return RedirectToAction("Index", "Home");
+                    if (!selectedHotelId.HasValue)
+                    {
+                        TempData["ErrorMessage"] = "Необходимо выбрать отель";
+                        return RedirectToAction("FlightPurchase", new { id });
+                    }
+
+                    hotel = await _db.Hotels
+                        .FirstOrDefaultAsync(h => h.Hotel_Id == selectedHotelId.Value);
+
+                    if (hotel == null)
+                    {
+                        TempData["ErrorMessage"] = "Выбранный отель не найден";
+                        return RedirectToAction("FlightPurchase", new { id });
+                    }
                 }
 
                 var booking = new Booking
@@ -137,8 +158,7 @@ namespace TourFlow.Controllers
                     Airline_Id = ticket.Airline_Id,
                     Booking_Date = DateTime.Now,
                     Booking_Status_Id = 1,
-                    Tour_Id = tour.Tour_Id,
-                    Account = user
+                    Hotel_Id = includeHotel ? selectedHotelId : null
                 };
 
                 using var transaction = await _db.Database.BeginTransactionAsync();
@@ -152,7 +172,15 @@ namespace TourFlow.Controllers
                     await _db.SaveChangesAsync();
 
                     await transaction.CommitAsync();
-                    TempData["SuccessMessage"] = $"Билет успешно приобретен! Номер брони: {booking.Booking_Id}";
+
+                    var successMessage = "Билет успешно приобретен!";
+                    if (includeHotel && hotel != null)
+                    {
+                        successMessage += $" Отель \"{hotel.Name}\" добавлен в заказ.";
+                    }
+                    successMessage += $" Номер брони: {booking.Booking_Id}";
+
+                    TempData["SuccessMessage"] = successMessage;
                 }
                 catch (DbUpdateException ex)
                 {
@@ -176,5 +204,18 @@ namespace TourFlow.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public string GetAirportCode(string city)
+        {
+            if (string.IsNullOrEmpty(city)) return "UNK";
+
+            return city switch
+            {
+                "Москва" => "SVO",
+                "Санкт-Петербург" => "LED",
+                "Абакан" => "ABA",
+                "Домодедово" => "DME",
+                _ => city.Length >= 3 ? city.Substring(0, 3).ToUpper() : city.ToUpper()
+            };
+        }
     }
 }
