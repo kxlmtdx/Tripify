@@ -23,6 +23,10 @@ namespace TourFlow.Models
 
         [Column(TypeName = "decimal(10, 2)")]
         public decimal Price { get; set; }
+        [StringLength(150)]
+        public string? Image_Url { get; set; }
+        [Required]
+        public int Days { get; set; }
 
         public Direction Direction { get; set; }
         public Hotel Hotel { get; set; }

@@ -60,6 +60,17 @@
         </form>
     </div>
 
+    <div class="view-card" style="flex: 1 1 auto; width: 100%; margin-top: 30px; background-image: url(https://i.pinimg.com/736x/2c/c3/cf/2cc3cfec2c9d0fbc025cdd26900fb4b4.jpg);">
+        <div class="info">
+            <h4>Не хочешь разбираться в билетах и отелях?</h4>
+            <h6 style="margin-left: 3px">Приобрети тур!</h6>
+            @* <button class="more-button" style="margin-top: 8px; background: ">Узнать больше</button> *@
+            <a asp-controller="Tours" asp-action="ToursList" type="button" class="more-button" style="margin-top: 8px; width: 135px">
+                Узнать больше
+            </a>
+        </div>
+    </div>
+
     @if (Model.Any())
     {
         <div class="table-container" style="width: auto">

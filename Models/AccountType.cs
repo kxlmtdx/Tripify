@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace TourFlow.Models
 {
+    [Table("Accounts_Type")]
     public class AccountType
     {
         [Key]

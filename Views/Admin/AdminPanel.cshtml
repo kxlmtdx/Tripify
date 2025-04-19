@@ -1,4 +1,8 @@
 ﻿@model List<TourFlow.Models.Account>
+@using Microsoft.EntityFrameworkCore
+@using TourFlow.Models
+@using TourFlow.Data
+@inject ApplicationDbContext _db
 
 @{
     ViewData["AdminPanel"] = "AdminPanel";
@@ -17,14 +21,13 @@
             <input type="radio" id="hotels" name="admin-tabs">
             <label for="hotels" class="admin-tab-button">Отели</label>
 
-            <input type="radio" id="status" name="admin-tabs">
-            <label for="status" class="admin-tab-button">Статус</label>
+            <input type="radio" id="bookings" name="admin-tabs">
+            <label for="bookings" class="admin-tab-button">Бронирования</label>
 
             <div class="admin-tabs-slider"></div>
         </div>
-
+        
         <div id="accounts-content" class="admin-content active">
-            <!-- Контент для раздела Аккаунты -->
             <div class="admin-card">
                 @if (Model != null && Model.Any())
                 {
@@ -35,7 +38,7 @@
                                     <th style="color: #ffffff">Логин</th>
                                     <th style="color: #ffffff">Тип</th>
                                     <th style="color: #ffffff">Почта</th>
-                                    <th style="color: #ffffff">Редактировать</th>
+                                    <th style="color: #ffffff">Действия</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -43,13 +46,14 @@
                                 {
                                     <tr>
                                         <td style="color: #ffffff">@user.Login</td>
-                                        <td style="color: #ffffff">@user.AccountType</td>
+                                        <td style="color: #ffffff">@user.AccountType?.Type</td>
                                         <td style="color: #ffffff">@user.Email</td>
-                                        <td width="20%">
-                                            <div class="w-20 h-10 btn-group" role="group">
-                                                <a asp-controller="AdminPanel" asp-action="Edit" asp-route-id="@user.Account_Id" class="btn btn-primary"><i></i>upd</a>
-                                                <a asp-controller="AdminPanel" asp-action="Delete" asp-route-id="@user.Account_Id" class="btn btn-primary"><i></i>del</a>
-                                            </div>
+                                        <td>
+                                            <a asp-action="Edit" asp-route-id="@user.Account_Id" class="btn btn-sm btn-warning">Изменить</a>
+                                            <form asp-action="Delete" method="post" style="display:inline;">
+                                                <input type="hidden" name="id" value="@user.Account_Id" />
+                                                <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                                            </form>
                                         </td>
                                     </tr>
                                 }
@@ -57,33 +61,168 @@
                         </table>
                     </div>
                 }
-                else
-                {
-                    <p style="color: #ffffff">Нет данных для отображения.</p>
-                }
             </div>
         </div>
 
         <div id="tours-content" class="admin-content">
-            <!-- Контент для раздела Туры -->
             <div class="admin-card">
-                <p style="color: #ffffff">Раздел в разработке</p>
+                <a asp-controller="Admin" asp-action="CreateTour" class="btn btn-success mb-3">+ Новый тур</a>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="color: #ffffff">Название</th>
+                                <th style="color: #ffffff">Направление</th>
+                                <th style="color: #ffffff">Отель</th>
+                                <th style="color: #ffffff">Цена</th>
+                                <th style="color: #ffffff">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var tour in _db.Tours
+                            .Include(t => t.Direction)
+                            .Include(t => t.Hotel)
+                            .ToList())
+                            {
+                                <tr>
+                                    <td style="color: #ffffff">@tour.Name</td>
+                                    <td style="color: #ffffff">@tour.Direction?.City</td>
+                                    <td style="color: #ffffff">@tour.Hotel?.Name</td>
+                                    <td style="color: #ffffff">@tour.Price.ToString("N0") ₽</td>
+                                    <td>
+                                        <a asp-action="EditTour" asp-route-id="@tour.Tour_Id" class="btn btn-sm btn-warning">Изменить</a>
+                                        <form asp-action="DeleteTour" method="post" style="display:inline;">
+                                            <input type="hidden" name="id" value="@tour.Tour_Id" />
+                                            <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
         <div id="hotels-content" class="admin-content">
-            <!-- Контент для раздела Отели -->
             <div class="admin-card">
-                <p style="color: #ffffff">Раздел в разработке</p>
+                <a asp-controller="Admin" asp-action="CreateHotel" class="btn btn-success mb-3">+ Новый отель</a>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="color: #ffffff">Название</th>
+                                <th style="color: #ffffff">Направление</th>
+                                <th style="color: #ffffff">Звезды</th>
+                                <th style="color: #ffffff">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var hotel in _db.Hotels
+                            .Include(h => h.Direction)
+                            .ToList())
+                            {
+                                <tr>
+                                    <td style="color: #ffffff">@hotel.Name</td>
+                                    <td style="color: #ffffff">@hotel.Direction?.City</td>
+                                    <td style="color: #ffffff">@hotel.Stars</td>
+                                    <td>
+                                        <a asp-action="EditHotel" asp-route-id="@hotel.Hotel_Id" class="btn btn-sm btn-warning">Изменить</a>
+                                        <form asp-action="DeleteHotel" method="post" style="display:inline;">
+                                            <input type="hidden" name="id" value="@hotel.Hotel_Id" />
+                                            <button type="submit" class="btn btn-sm btn-danger">Удалить</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
 
-        <div id="status-content" class="admin-content">
-            <!-- Контент для раздела Статус -->
+        <div id="bookings-content" class="admin-content">
             <div class="admin-card">
-                <p style="color: #ffffff">Раздел в разработке</p>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="color: #ffffff">ID</th>
+                                <th style="color: #ffffff">Пользователь</th>
+                                <th style="color: #ffffff">Статус</th>
+                                <th style="color: #ffffff">Дата</th>
+                                <th style="color: #ffffff">Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @try
+                            {
+                                var statusTypes = await _db.BookingStatusTypes.ToListAsync();
+                                var bookings = await _db.Booking
+                                .Include(b => b.Account)
+                                .Include(b => b.BookingStatusType)
+                                .AsNoTracking()
+                                .ToListAsync();
+
+                                foreach (var booking in bookings ?? new List<Booking>())
+                                {
+                                    <tr>
+                                        <td style="color: #ffffff">@booking.Booking_Id</td>
+                                        <td style="color: #ffffff">@(booking.Account?.Login ?? "n/a")</td>
+                                        <td style="color: #ffffff">
+                                            <form asp-action="UpdateBookingStatus" method="post">
+                                                <input type="hidden" name="bookingId" value="@booking.Booking_Id" />
+                                                @{
+                                                    var currentStatus = booking.BookingStatusType != null ?
+                                                    booking.Booking_Status_Id :
+                                                    (int?)null;
+                                                }
+                                                <select name="statusId"
+                                                        class="form-select-sm"
+                                                        onchange="this.form.submit()">
+                                                    @if (statusTypes != null)
+                                                    {
+                                                        foreach (var status in statusTypes)
+                                                        {
+                                                            <option value="@status.Booking_Status_Type_Id"
+                                                                    selected="@(status.Booking_Status_Type_Id == currentStatus)">
+                                                                @status.Booking_Type
+                                                            </option>
+                                                        }
+                                                    }
+                                                    else
+                                                    {
+                                                        <option value="">n/a</option>
+                                                    }
+                                                </select>
+                                            </form>
+                                        </td>
+                                        <td style="color: #ffffff">
+                                            @(booking.Booking_Date != default ?
+                                                booking.Booking_Date.ToString("dd.MM.yyyy") :
+                                                "n/a")
+                                        </td>
+                                        <td>
+                                            <a asp-action="Details" asp-route-id="@booking.Booking_Id"
+                                               class="btn btn-sm btn-info">Подробности</a>
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                <tr>
+                                    <td colspan="5" style="color: #ff0000">
+                                        Ошибка при загрузке данных: @ex.Message
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 <script src="@Url.Content("~/js/anotherSwitch.js")"></script>

@@ -1,93 +1,64 @@
 ﻿document.addEventListener('DOMContentLoaded', function () {
-    console.log('Админ-панель: DOM полностью загружен');
+    console.log('Админ-панель: Инициализация');
 
-    const elements = {
-        tabs: {
-            accounts: document.getElementById('accounts'),
-            tours: document.getElementById('tours'),
-            hotels: document.getElementById('hotels'),
-            status: document.getElementById('status')
-        },
-        content: {
-            accounts: document.getElementById('accounts-content'),
-            tours: document.getElementById('tours-content'),
-            hotels: document.getElementById('hotels-content'),
-            status: document.getElementById('status-content')
-        }
+    const tabContents = {
+        accounts: document.getElementById('accounts-content'),
+        tours: document.getElementById('tours-content'),
+        hotels: document.getElementById('hotels-content'),
+        bookings: document.getElementById('bookings-content')
     };
 
+    const tabButtons = {
+        accounts: document.getElementById('accounts'),
+        tours: document.getElementById('tours'),
+        hotels: document.getElementById('hotels'),
+        bookings: document.getElementById('bookings')
+    };
 
-    for (const type in elements) {
-        for (const key in elements[type]) {
-            if (!elements[type][key]) {
-                console.error('Element not found:', key);
-                return;
+    let hasErrors = false;
+    Object.entries(tabContents).forEach(([name, element]) => {
+        if (!element) {
+            console.error(`Контентная вкладка "${name}" не найдена`);
+            hasErrors = true;
+        }
+    });
+    Object.entries(tabButtons).forEach(([name, element]) => {
+        if (!element) {
+            console.error(`Кнопка вкладки "${name}" не найдена`);
+            hasErrors = true;
+        }
+    });
+    if (hasErrors) return;
+
+    const slider = document.querySelector('.admin-tabs-slider');
+    if (!slider) {
+        console.error('Слайдер не найден');
+        return;
+    }
+
+    function updateActiveTab() {
+        Object.values(tabContents).forEach(content => {
+            content.classList.remove('active');
+        });
+
+        const activeTab = Object.keys(tabButtons).find(key => tabButtons[key].checked);
+
+        if (activeTab && tabContents[activeTab]) {
+            tabContents[activeTab].classList.add('active');
+            const activeLabel = document.querySelector(`label[for="${activeTab}"]`);
+
+            if (activeLabel) {
+                slider.style.width = `${activeLabel.offsetWidth}px`;
+                slider.style.transform = `translateX(${activeLabel.offsetLeft}px)`;
+                console.log(`Активная вкладка: ${activeLabel.textContent.trim()}`);
             }
         }
     }
-    console.log('Все элементы управления найдены');
 
-    function switchTabs() {
-        console.log('Переключение вкладок...');
+    Object.values(tabButtons).forEach(button => {
+        button.addEventListener('change', updateActiveTab);
+    });
 
-        for (const key in elements.content) {
-            elements.content[key].style.display = 'none';
-        }
-
-        if (elements.tabs.accounts.checked) {
-            elements.content.accounts.style.display = 'block';
-            console.log('Показан раздел "Аккаунты"');
-        }
-        else if (elements.tabs.tours.checked) {
-            elements.content.tours.style.display = 'block';
-            console.log('Показан раздел "Туры"');
-        }
-        else if (elements.tabs.hotels.checked) {
-            elements.content.hotels.style.display = 'block';
-            console.log('Показан раздел "Отели"');
-        }
-        else if (elements.tabs.status.checked) {
-            elements.content.status.style.display = 'block';
-            console.log('Показан раздел "Статус"');
-        }
-
-        updateSliderPosition();
-    }
-
-    function updateSliderPosition() {
-        const slider = document.querySelector('.admin-tabs-slider');
-        if (!slider) {
-            console.error('Слайдер не найден');
-            return;
-        }
-
-        let activeLabel;
-        if (elements.tabs.accounts.checked) {
-            activeLabel = document.querySelector('label[for="accounts"]');
-        }
-        else if (elements.tabs.tours.checked) {
-            activeLabel = document.querySelector('label[for="tours"]');
-        }
-        else if (elements.tabs.hotels.checked) {
-            activeLabel = document.querySelector('label[for="hotels"]');
-        }
-        else if (elements.tabs.status.checked) {
-            activeLabel = document.querySelector('label[for="status"]');
-        }
-
-        if (activeLabel) {
-            slider.style.width = activeLabel.offsetWidth + 'px';
-            slider.style.transform = `translateX(${activeLabel.offsetLeft}px)`;
-            console.log(`Слайдер перемещен к "${activeLabel.textContent}"`);
-        }
-    }
-
-    for (const key in elements.tabs) {
-        elements.tabs[key].addEventListener('change', switchTabs);
-    }
-
-    console.log('Обработчики событий назначены');
-
-    switchTabs();
-    console.log('Инициализация завершена');
+    updateActiveTab();
+    console.log('Админ-панель: Инициализация завершена');
 });

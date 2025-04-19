@@ -22,6 +22,9 @@ namespace TourFlow.Models
         [ForeignKey("BookingStatusType")]
         public int Booking_Status_Id { get; set; }
 
+        [ForeignKey("FlightTicket")]
+        public int? Flight_Ticket_Id { get; set; }
+
         [ForeignKey("Hotel")]
         public int? Hotel_Id { get; set; }
 

@@ -7,9 +7,9 @@
 }
 
 <div class="main-container">
-    <h2 class="text-center mb-4">@ViewData["Title"]</h2>
+    <h2 class="text-center mb-4" style="color: #fffffff; margin: 32px;">Поиск туров</h2>
 
-    <div class="search-filters mb-4">
+    <div class="search-filters mb-4" style="color: #ffffff">
         <form method="get" class="row g-3">
             <div class="col-md-3">
                 <label class="form-label">Страна</label>
@@ -49,8 +49,8 @@
                 <label class="form-label">Цена до</label>
                 <input type="number" name="maxPrice" class="form-control" value="@ViewBag.MaxPrice" placeholder="макс">
             </div>
-            <div class="col-md-2 d-flex align-items-end">
-                <button type="submit" class="btn btn-primary w-100">Найти</button>
+            <div class="col-md-12 d-flex p-0">
+                <button type="submit" class="btn btn-primary flex-grow-1 search-button">Найти туры</button>
             </div>
         </form>
     </div>
@@ -61,11 +61,11 @@
             <div class="tour-card mb-4">
                 <div class="row g-0">
                     <div class="col-md-4">
-                        <img src="https://via.placeholder.com/300x200" class="img-fluid rounded-start" alt="@tour.Name">
+                        <img src="@tour.Image_Url" class="img-fluid rounded-start" alt="@tour.Name">
                     </div>
                     <div class="col-md-8">
                         <div class="card-body">
-                            <h5 class="card-title">@tour.Name</h5>
+                            <h5 class="card-title" style="color: #ffffff">@tour.Name</h5>
                             <p class="card-text">
                                 <small class="text-muted">
                                     @tour.Direction.City, @tour.Direction.Country •
@@ -74,7 +74,7 @@
                                 </small>
                             </p>
                             <p class="card-text">@tour.TourType.Type</p>
-                            <a href="@Url.Action("ToursPurchase", new { id = tour.Tour_Id })" class="btn btn-primary">Подробнее</a>
+                            <a href="@Url.Action("ToursPurchase", new { id = tour.Tour_Id })" class="btn btn-primary search-button">Подробнее</a>
                         </div>
                     </div>
                 </div>
